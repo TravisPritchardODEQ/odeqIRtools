@@ -2,4 +2,6 @@
 
 export("%>%")
 export(binomial_excursions)
+export(censor_data)
+export(geo_mean)
 importFrom(magrittr,"%>%")
