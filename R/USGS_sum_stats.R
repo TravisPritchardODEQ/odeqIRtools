@@ -47,11 +47,14 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
 
 
 
-  nwis.sum.stats.temp <- dataRetrieval::readNWISdv(siteNumbers = USGS_stations,
+print("Query NWIS Temperature begin....")
+    nwis.sum.stats.temp <- dataRetrieval::readNWISdv(siteNumbers = USGS_stations,
                                     parameterCd = "00010",
                                     startDate = start.date,
                                     endDate = end.date,
                                     statCd = statcds)
+
+    print("Query NWIS Temperature end")
 
   nwis.sum.stats.temp <- dataRetrieval::renameNWISColumns(nwis.sum.stats.temp)
 
@@ -61,32 +64,32 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
   # lag uses 6 because the 7 day moving average is inclusive of the date
   # If 1 day is missing from period, do not caluclate average
   temp4ma <- nwis.sum.stats.temp %>%
-    arrange(site_no, Date) %>%
-    group_by(site_no) %>%
-    mutate(startdate = lag(Date, 6, order_by = Date),
+    dplyr::arrange(site_no, Date) %>%
+    dplyr::group_by(site_no) %>%
+    dplyr::mutate(startdate = dplyr::lag(Date, 6, order_by = Date),
            # flag out which result gets a moving average calculated
            calcma = ifelse(startdate == (Date - 6), 1, 0 )) %>%
-    mutate(ma = ifelse(calcma == 1, round(rollmean(x = Wtemp_Max, 7, align = "right", fill = NA),1) , NA ))
+    dplyr::mutate(ma = ifelse(calcma == 1, round(zoo::rollmean(x = Wtemp_Max, 7, align = "right", fill = NA),1) , NA ))
 
 
 
   nwis.sum.stats.temp.gather <- temp4ma %>%
-    gather(Wtemp_Max,
+    tidyr::gather(Wtemp_Max,
            Wtemp,
            Wtemp_Min,
            ma, key = "stat", value = "result", na.rm = TRUE) %>%
-    mutate(qual = ifelse(stat == "Wtemp_Max" | stat == "ma", Wtemp_Max_cd,
+    dplyr::mutate(qual = ifelse(stat == "Wtemp_Max" | stat == "ma", Wtemp_Max_cd,
                          ifelse(stat == "Wtemp", Wtemp_cd,
                                 ifelse(stat == "Wtemp_Min", Wtemp_Min_cd, "ERROR" )))) %>%
-    select(agency_cd, site_no, Date, stat, result, qual, startdate) %>%
-    arrange(site_no, Date)
+    dplyr::select(agency_cd, site_no, Date, stat, result, qual, startdate) %>%
+    dplyr::arrange(site_no, Date)
 
 
 
 
   nwis.sum.stats.temp.AWQMS <- nwis.sum.stats.temp.gather %>%
-    ungroup() %>%
-    transmute(CharID = "TEMP",
+    dplyr::ungroup() %>%
+    dplyr::transmute(CharID = "Temperature, water",
               Result = result,
               Unit = "deg C",
               Method = "THM01",
@@ -124,7 +127,7 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
               ActComment = "",
               ActivityID = paste0(SiteID, ":", gsub("-","",ActStartDate), ":", ActivityType)
     ) %>%
-    filter(Qualcd != 'P Eqp',
+    dplyr::filter(Qualcd != 'P Eqp',
            Qualcd != 'P Dis',
            Qualcd != 'P Ssn',
            Qualcd != 'A e',
@@ -134,35 +137,40 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
 
 
   # NWIS pH -----------------------------------------------------------------
+
+  print("Query NWIS pH begin....")
+
   # Commenting out due to not using contiuous pH for assessment
-  nwis.sum.stats.ph <- readNWISdv(siteNumbers = USGS_stations,
+  nwis.sum.stats.ph <- dataRetrieval::readNWISdv(siteNumbers = USGS_stations,
                                   parameterCd = "00400",
                                   startDate = start.date,
                                   endDate = end.date,
                                   statCd =  c("00001", "00002"))
+  print("Query NWIS pH end")
 
-  nwis.sum.stats.ph <- renameNWISColumns(nwis.sum.stats.ph)
+
+  nwis.sum.stats.ph <- dataRetrieval::renameNWISColumns(nwis.sum.stats.ph)
 
   nwis.sum.stats.ph.gather <- nwis.sum.stats.ph %>%
-    select(agency_cd, site_no, Date, pH_Max, pH_Max_cd, pH_Min, pH_Min_cd) %>%
-    gather(pH_Max, pH_Min, key = "stat", value = "result") %>%
-    mutate(qual = case_when(stat == "pH_Max" ~ pH_Max_cd,
+    dplyr::select(agency_cd, site_no, Date, pH_Max, pH_Max_cd, pH_Min, pH_Min_cd) %>%
+    tidyr::gather(pH_Max, pH_Min, key = "stat", value = "result") %>%
+    dplyr::mutate(qual = dplyr::case_when(stat == "pH_Max" ~ pH_Max_cd,
                             stat == "pH_Min" ~ pH_Min_cd,
                             TRUE ~ "ERROR")) %>%
-    filter(!is.na(result)) %>%
-    select(agency_cd, site_no, Date, stat, result, qual) %>%
-    arrange(site_no, Date)
+    dplyr::filter(!is.na(result)) %>%
+    dplyr::select(agency_cd, site_no, Date, stat, result, qual) %>%
+    dplyr::arrange(site_no, Date)
 
 
 
   nwis.sum.stats.pH.AWQMS <- nwis.sum.stats.ph.gather %>%
-    transmute(CharID = "pH",
+    dplyr::transmute(CharID = "pH",
               Result = result,
               Unit = "None",
               Method = "pH-150.1",
               RsltType = "Calculated",
               Qualcd = qual,
-              StatisticalBasis = case_when(stat == "pH_Max" ~ "Daily Maximum",
+              StatisticalBasis = dplyr::case_when(stat == "pH_Max" ~ "Daily Maximum",
                                            stat == "pH_Median" ~ 'Daily Median',
                                            stat == "pH_Min" ~ "Daily Minimum",
                                            stat == "pH" ~ "Daily Mean",
@@ -194,7 +202,7 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
               ActComment = "",
               ActivityID = paste0(SiteID, ":", gsub("-","",ActStartDate), ":", ActivityType)
     ) %>%
-    filter(Qualcd != 'P Eqp',
+    dplyr::filter(Qualcd != 'P Eqp',
            Qualcd != 'P Dis',
            Qualcd != 'P Ssn',
            Qualcd != 'A e',
@@ -204,41 +212,46 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
   class(nwis.sum.stats.pH.AWQMS$SiteID) <- c("NULL", "number")
   # NWIS DO conc ------------------------------------------------------------
 
-  nwis.sum.stats.DO <- readNWISdv(siteNumbers = USGS_stations,
+
+  print("Query NWIS DO begin....")
+  nwis.sum.stats.DO <-dataRetrieval::readNWISdv(siteNumbers = USGS_stations,
                                   parameterCd = "00300",
                                   startDate = start.date,
                                   endDate = end.date,
                                   statCd = statcds)
 
+  print("Query NWIS DO end")
 
-  nwis.sum.stats.DO <- renameNWISColumns(nwis.sum.stats.DO)
+  nwis.sum.stats.DO <- dataRetrieval::renameNWISColumns(nwis.sum.stats.DO)
 
 
   # Calculate moving averages. If 1 or more daya are missing from period, do not caluclate average
   DO4ma <- nwis.sum.stats.DO %>%
-    arrange(site_no, Date) %>%
-    group_by(site_no) %>%
-    mutate(startdate7 = lag(Date, 6, order_by = Date),
+    dplyr::arrange(site_no, Date) %>%
+    dplyr::group_by(site_no) %>%
+    dplyr::mutate(startdate7 = dplyr::lag(Date, 6, order_by = Date),
            # flag out which result gets a moving average calculated
-           calc7ma = ifelse(startdate7 == (Date - 6), 1, 0 ),
-           startdate30 = lag(Date, 29, order_by = Date),
+           calc7ma = dplyr::case_when(is.na(startdate7) ~ 0,
+                               startdate7 == (Date - lubridate::days(6)) ~ 1,
+                               TRUE ~ 0 ),
+           startdate30 = dplyr::lag(Date, 29, order_by = Date),
            calc30ma = ifelse(startdate30 == (Date - 29), 1, 0 )) %>%
-    mutate(ma.mean7 = ifelse(calc7ma == 1, round(rollmean(x = DO, 7, align = "right", fill = NA),1) , NA ),
-           ma.mean30 = ifelse(calc30ma == 1, round(rollmean(x = DO, 30, align = "right", fill = NA),1) , NA ),
-           ma.min7 = ifelse(calc7ma == 1, round(rollmean(x = DO_Min, 7, align = "right", fill = NA),1) , NA ))
+    dplyr::mutate(ma.mean7 = ifelse(calc7ma == 1, round(zoo::rollmean(x = DO, 7, align = "right", fill = NA),1) , NA ),
+           ma.mean30 = ifelse(calc30ma == 1, round(zoo::rollmean(x = DO, 30, align = "right", fill = NA),1) , NA ),
+           ma.min7 = ifelse(calc7ma == 1, round(zoo::rollmean(x = DO_Min, 7, align = "right", fill = NA),1) , NA ))
 
 
   nwis.sum.stats.DO.gather <- DO4ma %>%
-    gather(DO_Max, DO, DO_Min, ma.mean7, ma.mean30,ma.min7,   key = "stat", value = "result", na.rm = TRUE) %>%
-    mutate(qual = ifelse(stat == "DO_Max", DO_Max_cd,
+    tidyr::gather(DO_Max, DO, DO_Min, ma.mean7, ma.mean30,ma.min7,   key = "stat", value = "result", na.rm = TRUE) %>%
+    dplyr::mutate(qual = ifelse(stat == "DO_Max", DO_Max_cd,
                          ifelse(stat == "DO" | stat == "ma.mean7" | stat == "ma.mean30", DO_cd,
                                 ifelse(stat == "DO_Min" | stat == "ma.min7", DO_Min_cd, "ERROR" )))) %>%
-    select(agency_cd, site_no, Date, stat, result, qual, startdate7, startdate30 )
+    dplyr::select(agency_cd, site_no, Date, stat, result, qual, startdate7, startdate30 )
 
 
   nwis.sum.stats.DO.AWQMS <- nwis.sum.stats.DO.gather %>%
-    ungroup() %>%
-    transmute(CharID = "DO",
+    dplyr::ungroup() %>%
+    dplyr::transmute(CharID = "Dissolved oxygen (DO)",
               Result = result,
               Unit = "mg/L",
               Method = "LUMIN",
@@ -279,8 +292,8 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
               AnaEndTimeZone = "",
               ActComment = "",
               ActivityID = paste0(SiteID, ":", gsub("-","",ActStartDate), ":", ActivityType)) %>%
-    arrange(SiteID, ActStartDate)%>%
-    filter(Qualcd != 'P Eqp',
+    dplyr::arrange(SiteID, ActStartDate)%>%
+    dplyr::filter(Qualcd != 'P Eqp',
            Qualcd != 'P Dis',
            Qualcd != 'P Ssn',
            Qualcd != 'A e',
@@ -317,10 +330,6 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
 
   # Monitoring station information ------------------------------------------
 
-  #read in county query
-  county_query <- read_csv("./Data Sources/county_codes.csv", col_types = c(col_character())) %>%
-    mutate(county_cd = as.character(county_cd)) %>%
-    select(county_cd, county_nm)
 
   if (nrow(nwis.sum.stats.DO) > 0 &
       nrow(nwis.sum.stats.ph) > 0) {
@@ -345,12 +354,12 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
 
 
 
-  nwissites <- readNWISsite(unique(nwissites))
+  nwissites <- dataRetrieval::readNWISsite(unique(nwissites))
 
 
   nwis.sites.AWQMS <- nwissites %>%
-    left_join(county_query, by = "county_cd") %>%
-    transmute(Stationkey = site_no,
+    dplyr::left_join(IRLibrary::county_codes, by = "county_cd") %>%
+    dplyr::transmute(Stationkey = site_no,
               Desc = station_nm,
               SiteComments = "",
               MonLocType = ifelse(site_tp_cd == "ST", 'River/Stream',
@@ -427,13 +436,14 @@ USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
   # Data_Split(nwis.sum.stats.DO.AWQMS)
   # Data_Split(nwis.sum.stats.temp.AWQMS)
 
-  NWIS_data <- bind_rows(nwis.sum.stats.temp.AWQMS
+  NWIS_data <- dplyr::bind_rows(nwis.sum.stats.temp.AWQMS
                          ,nwis.sum.stats.DO.AWQMS
                          ,nwis.sum.stats.pH.AWQMS
   )
 
 
-
+  write.csv(NWIS_data, paste0(save_location,"NWIS_sum_stats-", start.date, " - ", end.date, ".csv"), row.names = FALSE)
   write.csv(nwis.sites.AWQMS, paste0(save_location,"NWIS_Monitoring_Locations.csv"), row.names = FALSE)
+
 
 }
