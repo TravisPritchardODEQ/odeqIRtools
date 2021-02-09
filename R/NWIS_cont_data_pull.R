@@ -1,7 +1,23 @@
+#' NWIS_cont_data_pull
+#'
+#' This function queries continuous data from the NWIS database and produces AWQMS import files. Temperature, pH, and DO
+#' are queried and IR summary statistics are calculated. THe function outputs three csv files: NWIS Sumamry Stats,
+#' NWIS continuous pH, and NWIS monitoring location information. The function has no outputs, the CSV files serve as
+#' outputs.
+#'
+#' @param start.date Start date of data pull
+#' @param end.date End date of datapull
+#' @param save_location Folder to save output files to
+#' @param stateCD Statecode for datapull. Defaults to 'or'
+#' @export
+#'
+#'
 
 
-USGS_sum_stats <- function(start.date, end.date, save_location, stateCD = "or"){
+NWIS_cont_data_pull <- function(start.date, end.date, save_location, stateCD = "or"){
 
+
+  options(scipen=999)
 
 
   sites <- dataRetrieval::whatNWISsites(stateCD = stateCD,
