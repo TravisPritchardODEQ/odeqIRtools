@@ -14,7 +14,7 @@
 #'
 
 
-NWIS_cont_data_pull <- function(start.date, end.date, save_location, stateCD = "or"){
+NWIS_cont_data_pull <- function(start.date, end.date, save_location, stateCD = "or",split_file = TRUE){
 
 
   options(scipen=999)
@@ -457,8 +457,12 @@ print("Query NWIS Temperature begin....")
                          ,nwis.sum.stats.pH.AWQMS
   )
 
-
+  if(split_file){
+  IRLibrary::data_split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
+  } else {
   write.csv(NWIS_data, paste0(save_location,"NWIS_sum_stats-", start.date, " - ", end.date, ".csv"), row.names = FALSE)
+  }
+
   write.csv(nwis.sites.AWQMS, paste0(save_location,"NWIS_Monitoring_Locations.csv"), row.names = FALSE)
 
 
