@@ -374,7 +374,7 @@ print("Query NWIS Temperature begin....")
 
 
   nwis.sites.AWQMS <- nwissites %>%
-    dplyr::left_join(IRLibrary::county_codes, by = "county_cd") %>%
+    dplyr::left_join(odeqIRtools::county_codes, by = "county_cd") %>%
     dplyr::transmute(Stationkey = site_no,
               Desc = station_nm,
               SiteComments = "",
@@ -458,7 +458,7 @@ print("Query NWIS Temperature begin....")
   )
 
   if(split_file){
-  IRLibrary::data_split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
+    odeqIRtools::data_split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
   } else {
   write.csv(NWIS_data, paste0(save_location,"NWIS_sum_stats-", start.date, " - ", end.date, ".csv"), row.names = FALSE)
   }

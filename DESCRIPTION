@@ -1,4 +1,4 @@
-Package: IRLibrary
+Package: odeqIRtools
 Type: Package
 Title: Tools used in Oregon DEQ's Integrated Report Assessment
 Version: 0.1.0
@@ -9,8 +9,8 @@ Description: More about what it does (maybe more than one line)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/TravisPritchardODEQ/IRLibrary
-BugReports: https://github.com/TravisPritchardODEQ/IRLibrary/issues
+URL: https://github.com/TravisPritchardODEQ/odeqIRtools
+BugReports: https://github.com/TravisPritchardODEQ/odeqIRtools/issues
 RoxygenNote: 7.1.1
 Imports: 
     magrittr,
