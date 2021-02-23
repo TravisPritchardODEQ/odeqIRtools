@@ -7,7 +7,7 @@
 #' @param filepath string for pathway to save file. Must end with /
 #' @export
 #' @examples
-#' Data_Split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
+#' data_split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
 
 
 #'

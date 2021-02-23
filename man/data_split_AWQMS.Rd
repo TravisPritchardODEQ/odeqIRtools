@@ -19,6 +19,6 @@ data_split_AWQMS(df, split_on, size, filepath)
 This function splits a data frame (df) into files of size n and saves csv to filepath
 }
 \examples{
-Data_Split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
+data_split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
 
 }

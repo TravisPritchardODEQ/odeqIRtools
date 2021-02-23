@@ -4,12 +4,18 @@
 \alias{NWIS_cont_data_pull}
 \title{NWIS_cont_data_pull}
 \usage{
-NWIS_cont_data_pull(start.date, end.date, save_location, stateCD = "or")
+NWIS_cont_data_pull(
+  start.date,
+  end.date,
+  save_location,
+  stateCD = "or",
+  split_file = TRUE
+)
 }
 \arguments{
-\item{start.date}{Start date of data pull}
+\item{start.date}{Start date of data pull. Format: "yyyy-mm-dd"}
 
-\item{end.date}{End date of datapull}
+\item{end.date}{End date of datapull. Format: "yyyy-mm-dd"}
 
 \item{save_location}{Folder to save output files to}
 
