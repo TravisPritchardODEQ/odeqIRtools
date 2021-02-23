@@ -15,17 +15,19 @@ normalize_datetime(
 )
 }
 \arguments{
-\item{df}{dataframe to modify}
+\item{df}{dataframe to modify.}
 
-\item{datecol}{Name of the column that contains date values}
+\item{datecol}{Name of the column that contains date values.}
 
-\item{timecol}{Name of the column that contains time values}
+\item{timecol}{Name of the column that contains time values.}
 
-\item{tzcol}{Name of column that contains timezone values}
+\item{tzcol}{Name of column that contains timezone values.}
 
-\item{target_tz}{Timezone data should be normalized to}
+\item{target_tz}{Timezone data should be normalized to.}
 
-\item{norm_time_colname}{Name of column new data should be written to}
+\item{norm_time_colname}{Name of column new data should be written to.}
+
+\item{vector_only}{If true, return only a vector of normalized datetimes.}
 }
 \description{
 This function takes in datetime data that is collected under different timezones, and normalizes them to the same

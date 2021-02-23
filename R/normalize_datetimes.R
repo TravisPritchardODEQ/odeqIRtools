@@ -3,12 +3,13 @@
 #' This function takes in datetime data that is collected under different timezones, and normalizes them to the same
 #' time zone. This function is needed because R does not allow multiple timezones in a vector.
 #'
-#' @param df dataframe to modify
-#' @param datecol Name of the column that contains date values
-#' @param timecol Name of the column that contains time values
-#' @param tzcol Name of column that contains timezone values
-#' @param target_tz Timezone data should be normalized to
-#' @param norm_time_colname Name of column new data should be written to
+#' @param df dataframe to modify.
+#' @param datecol Name of the column that contains date values.
+#' @param timecol Name of the column that contains time values.
+#' @param tzcol Name of column that contains timezone values.
+#' @param target_tz Timezone data should be normalized to.
+#' @param norm_time_colname Name of column new data should be written to.
+#' @param vector_only If true, return only a vector of normalized datetimes.
 #' @export
 
 
@@ -40,9 +41,7 @@ normalize_datetime <- function(df, datecol = 'SampleStartDate', timecol = 'Sampl
 
   return(df)
   } else {
-
     return(final)
-
   }
 
 
