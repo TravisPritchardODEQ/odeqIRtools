@@ -9,7 +9,7 @@
 #' @param tzcol Name of column that contains timezone values.
 #' @param target_tz Timezone data should be normalized to.
 #' @param norm_time_colname Name of column new data should be written to.
-#' @param vector_only If true, return only a vector of normalized datetimes.
+#' @param vector_only If true, return only a vector of normalized datetimes. IF false, return dataframe with added datetime
 #' @export
 
 
@@ -17,7 +17,7 @@
 
 
 normalize_datetime <- function(df, datecol = 'SampleStartDate', timecol = 'SampleStartTime', tzcol = 'SampleStartTZ',
-                            target_tz = "America/Los_Angeles", norm_time_colname = 'time_norm', vector_only = FALSE){
+                            target_tz = "America/Los_Angeles", norm_time_colname = 'datetime', vector_only = FALSE){
 
 
   datetime <- df %>%

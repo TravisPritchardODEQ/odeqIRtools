@@ -10,7 +10,7 @@ normalize_datetime(
   timecol = "SampleStartTime",
   tzcol = "SampleStartTZ",
   target_tz = "America/Los_Angeles",
-  norm_time_colname = "time_norm",
+  norm_time_colname = "datetime",
   vector_only = FALSE
 )
 }
@@ -27,7 +27,7 @@ normalize_datetime(
 
 \item{norm_time_colname}{Name of column new data should be written to.}
 
-\item{vector_only}{If true, return only a vector of normalized datetimes.}
+\item{vector_only}{If true, return only a vector of normalized datetimes. IF false, return dataframe with added datetime}
 }
 \description{
 This function takes in datetime data that is collected under different timezones, and normalizes them to the same
