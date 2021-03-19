@@ -7,10 +7,15 @@
 #'
 #' @param start.date Start date of data pull. Format: "yyyy-mm-dd"
 #' @param end.date End date of datapull. Format: "yyyy-mm-dd"
-#' @param save_location Folder to save output files to
+#' @param project Name of project for AWQMS
+#' @param save_location Folder to save output files to. Sould end with a /
 #' @param stateCD Statecode for datapull. Defaults to 'or'
 #' @export
-#'
+#' @examples
+#'\dontrun{
+#'NWIS_cont_data_pull(start.date = '2021-01-01', end.date = '2021-12-31', save_location = "E:/Documents/",
+#'                    project = "Example Project")
+#'}
 #'
 
 
@@ -186,8 +191,8 @@ print("Query NWIS Temperature begin....")
                      "Result_Status_ID" = pH_Inst_cd)
 
 
-  pH_deployments <-   nwis_ph %>%
-   dplyr::group_by(Monitoring_Location_ID,Equipment_ID) %>%
+  pH_deployments <-   nwis_ph_results %>%
+   dplyr::group_by(Monitoring_Location_ID, Equipment_ID) %>%
    dplyr::summarise(Activity_start_date_time = min(Activity_start_date),
                     Activity_end_date_time  = max(Activity_start_date),
                     Activity_start_end_time_Zone = dplyr::first(Activity_Time_Zone)) %>%
@@ -206,7 +211,7 @@ print("Query NWIS Temperature begin....")
 
   openxlsx::write.xlsx(pH_deployments, file = paste0(save_location, "NWIS_continuous_pH_Deployments.xlsx"))
 
-odeqIRtools::data_split_AWQMS(nwis_ph, split_on = 'Monitoring_Location_ID', size = 100000, filepath = save_location)
+odeqIRtools::data_split_AWQMS(nwis_ph_results, split_on = 'Monitoring_Location_ID', size = 100000, filepath = save_location)
 
   # NWIS DO conc ------------------------------------------------------------
 
@@ -255,7 +260,7 @@ odeqIRtools::data_split_AWQMS(nwis_ph, split_on = 'Monitoring_Location_ID', size
               Method = "LUMIN",
               RsltType = "Calculated",
               Qualcd = qual,
-              StatisticalBasis = case_when(stat == "ma.mean7" ~"7DMADMean",
+              StatisticalBasis = dplyr::case_when(stat == "ma.mean7" ~"7DMADMean",
                                            stat == "DO_Max" ~"Daily Maximum",
                                            stat == "DO" ~"Daily Mean",
                                            stat == "DO_Min" ~ "Daily Minimum",
@@ -331,16 +336,16 @@ odeqIRtools::data_split_AWQMS(nwis_ph, split_on = 'Monitoring_Location_ID', size
 
 
   if (nrow(nwis.sum.stats.DO) > 0 &
-      nrow(nwis.sum.stats.ph) > 0) {
+      nrow(nwis_ph_results) > 0) {
     nwissites <-
       unique(c(
         unique(nwis.sum.stats.DO.AWQMS$SiteID),
         unique(nwis.sum.stats.temp.AWQMS$SiteID),
-        unique(nwis.sum.stats.pH.AWQMS$SiteID)
+        unique(nwis_ph_results$SiteID)
       ))
 
   } else if (nrow(nwis.sum.stats.DO) > 0 &
-             nrow(nwis.sum.stats.ph) == 0) {
+             nrow(nwis_ph_results) == 0) {
     nwissites <-
       unique(c(
         unique(nwis.sum.stats.DO.AWQMS$SiteID),
@@ -436,11 +441,11 @@ odeqIRtools::data_split_AWQMS(nwis_ph, split_on = 'Monitoring_Location_ID', size
   # Data_Split(nwis.sum.stats.DO.AWQMS)
   # Data_Split(nwis.sum.stats.temp.AWQMS)
 
-  NWIS_data <- dplyr::bind_rows(nwis.sum.stats.temp.AWQMS
+  NWIS_sum_stats_data <- dplyr::bind_rows(nwis.sum.stats.temp.AWQMS
                          ,nwis.sum.stats.DO.AWQMS)
 
   if(split_file){
-    odeqIRtools::data_split_AWQMS(NWIS_data, split_on = "SiteID", size = 100000, filepath = save_location)
+    odeqIRtools::data_split_AWQMS(NWIS_sum_stats_data, split_on = "SiteID", size = 100000, filepath = save_location)
   } else {
   write.csv(NWIS_data, paste0(save_location,"NWIS_sum_stats-", start.date, " - ", end.date, ".csv"), row.names = FALSE)
   }
