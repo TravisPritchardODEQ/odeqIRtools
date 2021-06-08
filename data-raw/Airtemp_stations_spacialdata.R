@@ -5,7 +5,9 @@
 library(sf)
 
 
-Airtemp_stations_sf <- read_sf(dsn = "data-raw/Air_temp_stations")
+Airtemp_stations_sf <- read_sf(dsn = "data-raw/Air_temp_stations") %>%
+  rename(Air_Station = STATION,
+         Air_Station_Name = Station_na)
 
 
 usethis::use_data(Airtemp_stations_sf, overwrite = TRUE)
