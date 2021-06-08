@@ -8,6 +8,8 @@
 #' @param monloc_col Name of column in df that contains monitoring location name data. Default is "MLOCID"
 #' @param Lat_col Name of column in df that contains Latitude information. Default is "Lat_DD"
 #' @param Long_col Name of column in df that contains Longitude information. Default is "Long_DD"
+#' @return Original dataframe with NOAA air temperature station ID and Name appended
+#' @export
 
 
 air_station_lookup <- function(df, monloc_col= 'MLocID', Lat_col = 'Lat_DD', Long_col = 'Long_DD'){

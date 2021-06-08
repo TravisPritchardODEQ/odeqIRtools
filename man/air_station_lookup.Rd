@@ -20,6 +20,9 @@ air_station_lookup(
 
 \item{Long_col}{Name of column in df that contains Longitude information. Default is "Long_DD"}
 }
+\value{
+Original dataframe with NOAA air temperature station ID and Name appended
+}
 \description{
 This function matches monitoring stations to their nearest NOAA air temperature station. This tool references data
 created by shp files generated from NOAA datasets that represent stations with enugh data to be usable for the air
