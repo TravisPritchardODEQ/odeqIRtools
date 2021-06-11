@@ -18,7 +18,7 @@ distinct_mlocs <- df %>%
   select(all_of(monloc_col), all_of(Long_col), all_of(Lat_col)) %>%
   distinct()
 
-monlocs_sf <- sf::st_as_sf(df, coords=c(Long_col ,Lat_col), crs = st_crs(Airtemp_stations_sf))
+monlocs_sf <- sf::st_as_sf(df, coords=c(Long_col ,Lat_col), crs = sf::st_crs(Airtemp_stations_sf))
 
 intersection <- data.frame(sf::st_intersection(Airtemp_stations_sf, monlocs_sf)) %>%
   select(all_of(monloc_col), Air_Station , Air_Station_Name)
