@@ -26,6 +26,7 @@ intersection <- data.frame(sf::st_intersection(Airtemp_stations_sf, monlocs_sf))
 rejoined <- df %>%
   left_join(intersection, by = monloc_col )
 
+print('Data joined to air temperature stations identified in the 2022 IR process')
 
 return(rejoined)
 }

@@ -2,6 +2,7 @@
 library(odeqIRextdata)
 library(tidyverse)
 library(lubridate)
+library(runner)
 
 
 # Download air temperature data from NOAA -------------------------------------------------------------------------
@@ -401,13 +402,31 @@ OR_airtemp_exclusion_thresholds <- air_temp_7d_2 %>%
 usethis::use_data(OR_airtemp_exclusion_thresholds, overwrite = TRUE)
 
 OR_air_temp <- air_temp_7d %>%
-  filter(STATION %in% unique(OR_airtemp_exclusion_thresholds$STATION)) %>%
+  filter(STATION %in% unique(OR_airtemp_exclusion_thresholds$Air_temp_station)) %>%
   select(STATION, LONGITUDE, LATITUDE, DATE, TMAX) %>%
   rename(Air_temp_station = STATION,
          Air_temp_long = LONGITUDE,
          Air_temp_lat = LATITUDE,
          Date = DATE,
-         Air_Temp_daily_max = TMAX)
+         Air_Temp_daily_max = TMAX) %>%
+ left_join(OR_airtemp_exclusion_thresholds) %>%
+  mutate(above_exclusion_1d = case_when(Air_Temp_daily_max > air_temp_exclusion_value ~ "Yes",
+                                     Air_Temp_daily_max <=  air_temp_exclusion_value ~ "No",
+                                     TRUE ~ "ERROR") ) %>%
+  dplyr::group_by(Air_temp_station) %>%
+  dplyr::mutate(d = runner(x = data.frame(dDTmax_run = Air_Temp_daily_max,
+                                          date_run = Date,
+                                          exclusion_value = air_temp_exclusion_value),
+                           k = "7 days",
+                           lag = 0,
+                           idx = Date,
+                           f = function(x) list(x))) %>%
+  dplyr::mutate(d = purrr::map(d, ~ .x %>%
+                                 dplyr::summarise(above_exclusion_7d = case_when(max(dDTmax_run) > first(exclusion_value) ~ "Yes",
+                                                                                 TRUE ~ "No") )
+
+  )) %>%
+  tidyr::unnest_wider(d)
 
 usethis::use_data(OR_air_temp, overwrite = TRUE)
 
@@ -416,8 +435,8 @@ usethis::use_data(OR_air_temp, overwrite = TRUE)
 
 # Generate list of usable stations --------------------------------------------------------------------------------
 
-#pass this to ARCGIS to calculate shp file of polygons
-
+#Import this in ARCGIS and calculate shp file of polygons
+#save shp file to Air_temp_stations
 OR_usable_air_stations <- OR_air_temp_usable %>%
   select(STATION, NAME, LATITUDE, LONGITUDE) %>%
   distinct()
