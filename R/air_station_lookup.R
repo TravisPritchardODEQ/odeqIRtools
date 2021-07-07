@@ -12,19 +12,19 @@
 #' @export
 
 
-air_station_lookup <- function(df, monloc_col= 'MLocID', Lat_col = 'Lat_DD', Long_col = 'Long_DD'){
+air_station_lookup <- function(df, monloc_col= 'MLocID', lat_col = 'Lat_DD', long_col = 'Long_DD'){
 
 distinct_mlocs <- df %>%
-  select(all_of(monloc_col), all_of(Long_col), all_of(Lat_col)) %>%
-  distinct()
+  dplyr::select(all_of(monloc_col), dplyr::all_of(long_col), dplyr::all_of(lat_col)) %>%
+  dplyr::distinct()
 
-monlocs_sf <- sf::st_as_sf(distinct_mlocs, coords=c(Long_col ,Lat_col), crs = sf::st_crs(Airtemp_stations_sf))
+monlocs_sf <- sf::st_as_sf(distinct_mlocs, coords=c(long_col ,lat_col), crs = sf::st_crs(Airtemp_stations_sf))
 
 intersection <- data.frame(sf::st_intersection(Airtemp_stations_sf, monlocs_sf)) %>%
-  select(all_of(monloc_col), Air_Station , Air_Station_Name)
+  dplyr::select(dplyr::all_of(monloc_col), Air_Station , Air_Station_Name)
 
 rejoined <- df %>%
-  left_join(intersection, by = monloc_col )
+  dplyr::left_join(intersection, by = monloc_col )
 
 print('Data joined to nearest neighbor air temperature stations identified in the 2022 IR process')
 
