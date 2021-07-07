@@ -439,7 +439,7 @@ usethis::use_data(OR_air_temp, overwrite = TRUE)
 
 #Import this in ARCGIS and calculate shp file of polygons
 #save shp file to Air_temp_stations
-OR_usable_air_stations <- OR_air_temp_usable %>%
+OR_usable_air_stations <- OR_air_temp %>%
   select(STATION, NAME, LATITUDE, LONGITUDE) %>%
   distinct()
 
