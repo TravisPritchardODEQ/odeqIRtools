@@ -18,7 +18,7 @@ distinct_mlocs <- df %>%
   select(all_of(monloc_col), all_of(Long_col), all_of(Lat_col)) %>%
   distinct()
 
-monlocs_sf <- sf::st_as_sf(df, coords=c(Long_col ,Lat_col), crs = sf::st_crs(Airtemp_stations_sf))
+monlocs_sf <- sf::st_as_sf(distinct_mlocs, coords=c(Long_col ,Lat_col), crs = sf::st_crs(Airtemp_stations_sf))
 
 intersection <- data.frame(sf::st_intersection(Airtemp_stations_sf, monlocs_sf)) %>%
   select(all_of(monloc_col), Air_Station , Air_Station_Name)
@@ -26,7 +26,7 @@ intersection <- data.frame(sf::st_intersection(Airtemp_stations_sf, monlocs_sf))
 rejoined <- df %>%
   left_join(intersection, by = monloc_col )
 
-print('Data joined to air temperature stations identified in the 2022 IR process')
+print('Data joined to nearest neighbor air temperature stations identified in the 2022 IR process')
 
 return(rejoined)
 }

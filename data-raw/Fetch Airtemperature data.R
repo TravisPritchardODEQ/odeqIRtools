@@ -404,7 +404,7 @@ usethis::use_data(OR_airtemp_exclusion_thresholds, overwrite = TRUE)
 OR_air_temp <- air_temp_7d %>%
   filter(STATION %in% unique(OR_airtemp_exclusion_thresholds$Air_temp_station)) %>%
   select(STATION, LONGITUDE, LATITUDE, DATE, TMAX) %>%
-  rename(Air_temp_station = STATION,
+  rename(Air_Station  = STATION,
          Air_temp_long = LONGITUDE,
          Air_temp_lat = LATITUDE,
          Date = DATE,
@@ -413,7 +413,7 @@ OR_air_temp <- air_temp_7d %>%
   mutate(above_exclusion_1d = case_when(Air_Temp_daily_max > air_temp_exclusion_value ~ "Yes",
                                      Air_Temp_daily_max <=  air_temp_exclusion_value ~ "No",
                                      TRUE ~ "ERROR") ) %>%
-  dplyr::group_by(Air_temp_station) %>%
+  dplyr::group_by(Air_Station) %>%
   dplyr::mutate(d = runner(x = data.frame(dDTmax_run = Air_Temp_daily_max,
                                           date_run = Date,
                                           exclusion_value = air_temp_exclusion_value),
@@ -427,6 +427,8 @@ OR_air_temp <- air_temp_7d %>%
 
   )) %>%
   tidyr::unnest_wider(d)
+
+
 
 usethis::use_data(OR_air_temp, overwrite = TRUE)
 
