@@ -18,7 +18,7 @@
 
 
 
-air_temp_exclusion <- function(df, date_col = 'SampleStartDate', monloc_col= 'MLocID',
+air_temp_exclusion <- function(df, date_col = 'Date', monloc_col= 'MLocID',
                                lat_col = 'Lat_DD', long_col = 'Long_DD'){
 
   # Structure the Date to date_col join by statement
@@ -33,7 +33,7 @@ air_temp_exclusion <- function(df, date_col = 'SampleStartDate', monloc_col= 'ML
                                    air_temp_exclusion_value, above_exclusion_1d, above_exclusion_7d),
                      by = c('Air_Station', by_date ) )
 
-  return(join_air_station)
+  return(join_data)
 
 }
 
