@@ -21,9 +21,14 @@
 air_temp_exclusion <- function(df, date_col = 'SampleStartDate', monloc_col= 'MLocID',
                                lat_col = 'Lat_DD', long_col = 'Long_DD'){
 
+  # Structure the Date to date_col join by statement
+  # This allows us to join the "Date" field in OR_air_temp to whatever the data column is named in the starting
+  # dataframe.
   by_date = rlang::set_names('Date', dplyr::quo_name(date_col))
 
-  join_air_station <- air_station_lookup(df, monloc_col= monloc_col, lat_col = lat_col, long_col = long_col) %>%
+  join_air_station <- air_station_lookup(df, monloc_col= monloc_col, lat_col = lat_col, long_col = long_col)
+
+  join_data <- join_air_station %>%
     dplyr::left_join(dplyr::select(OR_air_temp, Air_Station, Date, Air_Temp_daily_max,
                                    air_temp_exclusion_value, above_exclusion_1d, above_exclusion_7d),
                      by = c('Air_Station', by_date ) )
