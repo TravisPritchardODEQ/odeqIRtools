@@ -7,8 +7,8 @@
 air_station_lookup(
   df,
   monloc_col = "MLocID",
-  Lat_col = "Lat_DD",
-  Long_col = "Long_DD"
+  lat_col = "Lat_DD",
+  long_col = "Long_DD"
 )
 }
 \arguments{
