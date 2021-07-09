@@ -19,6 +19,7 @@ Imports:
     lubridate (>= 1.7.9.2),
     zoo (>= 1.8.8),
     openxlsx (>= 4.2.3),
-    sf
+    sf,
+    stringr
 Depends: 
     R (>= 2.10)
