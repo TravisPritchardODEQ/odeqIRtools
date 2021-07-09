@@ -10,7 +10,7 @@ unique_AU(AU_ID)
 \item{AU_ID}{AU_ID string to extract unique code portion from}
 }
 \value{
-THe unique portion of an AU_ID as string
+The unique portion of an AU_ID as string
 }
 \description{
 This function extracts the unique element from an AU_ID. It will extract the last element defines by the '_' symbol.
