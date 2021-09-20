@@ -7,6 +7,7 @@
 #' @param lat Latitude of station
 #' @param long Longitude of station
 #' @return default DOC value. If -9999 is returned, station is outside of georeferenced area.
+#' @export
 #' @examples
 #' \dontrun{
 #'Al_default_DOC(lat = 45.80369 , long = -123.9551)
