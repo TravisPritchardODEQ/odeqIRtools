@@ -20,6 +20,8 @@ Imports:
     zoo (>= 1.8.8),
     openxlsx (>= 4.2.3),
     sf,
-    stringr
+    stringr,
+    geojsonsf,
+    httr
 Depends: 
     R (>= 2.10)
