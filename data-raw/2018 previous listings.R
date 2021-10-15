@@ -17,7 +17,8 @@ AU_previous_categories_import <- read.csv("E:/Documents/IR2018/ATTAINS/Rollup/Ba
 AU_previous_categories <- AU_previous_categories_import %>%
   select(AU_ID, Char_Name,  Pollu_ID, wqstd_code, Period, IR_category) %>%
   rename(AU_previous_IR_category = IR_category) %>%
-  mutate(Pollu_ID = as.character(Pollu_ID))
+  mutate(Pollu_ID = as.character(Pollu_ID),
+         wqstd_code = as.character(wqstd_code))
 
 
 
