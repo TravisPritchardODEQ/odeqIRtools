@@ -12,7 +12,13 @@ WS_GNIS_previous_listings <- WS_GNIS_previous_listings_import %>%
 
 
 
-AU_previous_categories_import <- read.csv("E:/Documents/IR2018/ATTAINS/Rollup/Basin_categories/ALL BASINS_Parameters.csv")
+AU_previous_categories_import <-  read_excel("C:/Users/tpritch/Desktop/previous_listings.xlsx",
+                                             col_types = c("numeric", "text", "text",
+                                                           "text", "text", "text", "text", "text",
+                                                           "text", "text", "text", "numeric",
+                                                           "numeric", "text", "text", "text",
+                                                           "text", "text"))
+
 
 AU_previous_categories <- AU_previous_categories_import %>%
   select(AU_ID, Char_Name,  Pollu_ID, wqstd_code, Period, IR_category) %>%
