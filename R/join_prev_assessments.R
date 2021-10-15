@@ -35,7 +35,7 @@ join_prev_assessments <- function(df, AU_type){
     GNIS_join_names <- names(GNIS_join)
 
     overall_join <- GNIS_join %>%
-      left_join(overall_category) %>%
+      left_join(AU_previous_categories) %>%
       select(all_of(GNIS_join_names), AU_previous_IR_category)
   } else {
 
@@ -46,7 +46,7 @@ join_prev_assessments <- function(df, AU_type){
     df_names <- names(df)
     overall_join <- df %>%
       mutate(Pollu_ID = as.character(Pollu_ID)) %>%
-      left_join(overall_category) %>%
+      left_join(AU_previous_categories) %>%
       select(all_of(df_names), AU_previous_IR_category)
 
   }
