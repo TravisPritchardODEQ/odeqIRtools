@@ -17,8 +17,8 @@ join_prev_assessments <- function(df, AU_type){
 
   # test dataset ----------------------------------------------------------------------------------------------------
 
-  df <- other_category
-  AU_type <- "Other"
+  # df <- other_category
+  # AU_type <- "Other"
 
   if(AU_type == "WS"){
 
@@ -41,10 +41,10 @@ join_prev_assessments <- function(df, AU_type){
 
     # non-watershed ---------------------------------------------------------------------------------------------------
 
-    df <- other_category
 
     df_names <- names(df)
-    overall_join <- df %>%
+
+     overall_join <- df %>%
       mutate(Pollu_ID = as.character(Pollu_ID)) %>%
       left_join(AU_previous_categories) %>%
       select(all_of(df_names), AU_previous_IR_category)
