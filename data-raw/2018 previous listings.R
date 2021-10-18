@@ -8,7 +8,12 @@ WS_GNIS_previous_listings_import <- read.xlsx("//deqhq1/WQASSESSMENT/2022IRFiles
 
 WS_GNIS_previous_listings <- WS_GNIS_previous_listings_import %>%
   select(AU_ID, Char_Name, AU_GNIS, Pollu_ID, wqstd_code, Period, IR_category) %>%
-  rename(GNIS_previous_IR_impairement = IR_category)
+  rename(GNIS_previous_IR_impairement = IR_category,
+         period = Period) %>%
+  mutate(period = case_when(period == 'Year Round' ~ 'year_round',
+                            period == 'Spawning' ~ 'Spawn',
+                            period == "<Null>" ~ NA_character_))
+
 
 
 
@@ -24,7 +29,11 @@ AU_previous_categories <- AU_previous_categories_import %>%
   select(AU_ID, Char_Name,  Pollu_ID, wqstd_code, Period, IR_category) %>%
   rename(AU_previous_IR_category = IR_category) %>%
   mutate(Pollu_ID = as.character(Pollu_ID),
-         wqstd_code = as.character(wqstd_code))
+         wqstd_code = as.character(wqstd_code)) %>%
+  rename(period = Period) %>%
+  mutate(period = case_when(period == 'Year Round' ~ 'year_round',
+                            period == 'Spawning' ~ 'Spawn',
+                            period == "<Null>" ~ NA_character_))
 
 
 
