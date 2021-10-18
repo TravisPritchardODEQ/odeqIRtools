@@ -1,11 +1,11 @@
 #' data_aggregation
 #'
-#' This function joins dataframe to the results identified in teh data aggregation process. It will subsittiute
+#' This function joins dataframe to the results identified in the data aggregation process. It will substitute
 #' IRResultNWQSunit for the mean IRResultNWQSunit of the group. It will keep one result, and discard the rest.
 #' The source data, 'aggregate_data' needs to be updated every cycle.
 #'
-#'  @param df
-#'  @export
+#' @param df input dataframe
+#' @export
 
 
 
