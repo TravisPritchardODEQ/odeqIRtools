@@ -1,4 +1,4 @@
-#' aggregate_data
+#' data_aggregation
 #'
 #' This function joins dataframe to the results identified in teh data aggregation process. It will subsittiute
 #' IRResultNWQSunit for the mean IRResultNWQSunit of the group. It will keep one result, and discard the rest.
@@ -10,7 +10,7 @@
 
 
 
-aggregate_data <- function(df){
+data_aggregation <- function(df){
 
 data_to_agg <- df %>%
   left_join(aggregate_data) %>%
