@@ -30,13 +30,13 @@ join_prev_assessments <- function(df, AU_type){
       mutate(AU_GNIS = str_c(AU_ID, AU_GNIS_Name, sep = ";"),
              Pollu_ID = as.character(Pollu_ID),
              wqstd_code = as.character(wqstd_code)) %>%
-      left_join(WS_GNIS_previous_listings) %>%
+      left_join(select(WS_GNIS_previous_listings, -Char_Name)) %>%
       select(all_of(df_names), GNIS_previous_IR_impairement)
 
     GNIS_join_names <- names(GNIS_join)
 
     overall_join <- GNIS_join %>%
-      left_join(AU_previous_categories) %>%
+      left_join(select(AU_previous_categories, -Char_Name)) %>%
       select(all_of(GNIS_join_names), AU_previous_IR_category)
   } else {
 
@@ -48,7 +48,7 @@ join_prev_assessments <- function(df, AU_type){
      overall_join <- df %>%
       mutate(Pollu_ID = as.character(Pollu_ID),
              wqstd_code = as.character(wqstd_code)) %>%
-      left_join(AU_previous_categories) %>%
+      left_join(select(AU_previous_categories, -Char_Name)) %>%
       select(all_of(df_names), AU_previous_IR_category)
 
   }
