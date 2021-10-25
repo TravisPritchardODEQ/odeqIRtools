@@ -12,12 +12,13 @@ WS_GNIS_previous_listings <- WS_GNIS_previous_listings_import %>%
          period = Period) %>%
   mutate(period = case_when(period == 'Year Round' ~ 'year_round',
                             period == 'Spawning' ~ 'Spawn',
-                            period == "<Null>" ~ NA_character_))
+                            period == "<Null>" ~ NA_character_))%>%
+  distinct()
 
 
 
 
-AU_previous_categories_import <-  read_excel("C:/Users/tpritch/Desktop/previous_listings.xlsx",
+AU_previous_categories_import <-  readxl::read_excel("C:/Users/tpritch/Desktop/previous_listings.xlsx",
                                              col_types = c("numeric", "text", "text",
                                                            "text", "text", "text", "text", "text",
                                                            "text", "text", "text", "numeric",
@@ -33,7 +34,9 @@ AU_previous_categories <- AU_previous_categories_import %>%
   rename(period = Period) %>%
   mutate(period = case_when(period == 'Year Round' ~ 'year_round',
                             period == 'Spawning' ~ 'Spawn',
-                            period == "<Null>" ~ NA_character_))
+                            period == "<Null>" ~ NA_character_)) %>%
+
+  distinct()
 
 
 
