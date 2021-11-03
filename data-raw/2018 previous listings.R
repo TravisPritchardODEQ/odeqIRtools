@@ -11,7 +11,7 @@ WS_GNIS_previous_listings <- WS_GNIS_previous_listings_import %>%
   rename(GNIS_previous_IR_impairement = IR_category,
          period = Period) %>%
   mutate(period = case_when(period == 'Year Round' ~ 'year_round',
-                            period == 'Spawning' ~ 'Spawn',
+                            period == 'Spawning' ~ 'spawn',
                             period == "<Null>" ~ NA_character_))%>%
   distinct()
 
@@ -33,7 +33,7 @@ AU_previous_categories <- AU_previous_categories_import %>%
          wqstd_code = as.character(wqstd_code)) %>%
   rename(period = Period) %>%
   mutate(period = case_when(period == 'Year Round' ~ 'year_round',
-                            period == 'Spawning' ~ 'Spawn',
+                            period == 'Spawning' ~ 'spawn',
                             period == "<Null>" ~ NA_character_)) %>%
 
   distinct()
