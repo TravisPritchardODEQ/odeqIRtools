@@ -4,7 +4,8 @@ library(openxlsx)
 
 # Bring in previous listings --------------------------------------------------------------------------------------
 
-WS_GNIS_previous_listings_import <- read.xlsx("//deqhq1/WQASSESSMENT/2022IRFiles/Code/Watershed_Impairements_parameters.xlsx")
+WS_GNIS_previous_listings_import <-openxlsx::read.xlsx("C:/Users/tpritch/Documents/IR_2022/Rollups/rollup helper/Previous IR categories.xlsx",
+                                                      sheet = 'Previous GNIS listings')
 
 WS_GNIS_previous_listings <- WS_GNIS_previous_listings_import %>%
   select(AU_ID, Char_Name, AU_GNIS, Pollu_ID, wqstd_code, Period, IR_category) %>%
@@ -18,7 +19,8 @@ WS_GNIS_previous_listings <- WS_GNIS_previous_listings_import %>%
 
 
 
-AU_previous_categories_import <-  readxl::read_excel("C:/Users/tpritch/Desktop/previous_listings.xlsx",
+AU_previous_categories_import <-  readxl::read_excel("C:/Users/tpritch/Documents/IR_2022/Rollups/rollup helper/Previous IR categories.xlsx",
+                                                     sheet = 'Previous AU categoires',
                                              col_types = c("numeric", "text", "text",
                                                            "text", "text", "text", "text", "text",
                                                            "text", "text", "text", "numeric",
