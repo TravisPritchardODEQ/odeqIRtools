@@ -1,7 +1,7 @@
 Package: odeqIRtools
 Type: Package
 Title: Tools used in Oregon DEQ's Integrated Report Assessment
-Version: 0.1.0
+Version: 0.2.0
 Author: Travis Pritchard
 Maintainer: Travis Pritchard <Pritchard.Travis@deq.state.or.us>
 Description: More about what it does (maybe more than one line)
