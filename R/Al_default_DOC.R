@@ -35,7 +35,7 @@ Al_default_DOC <- function(lat, long){
     sf::st_drop_geometry()
 
   if(is.null(region_df[1,1])) {
-    print("Lat/Long out of area")
+    print(paste("Lat/Long (",lat, ",", long,") out of area"))
     return(NA_real_)
   } else {
 
