@@ -11,7 +11,10 @@ strd_lyr_display(GeoRef_Standards_path, relation_table, write_path)
 
 \item{relation_table}{The excel doc with the relationship tables for the standards layer. Should be on the sharepoint site}
 
-\item{write_path}{The}
+\item{write_path}{The path to save the outputs}
+}
+\value{
+Returns nothing. Saves 2 Rdata files and the strd layer display csv to write_path
 }
 \description{
 This function pulls the standards information from the georeferenced standards layer and joins

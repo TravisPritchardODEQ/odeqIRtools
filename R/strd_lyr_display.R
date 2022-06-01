@@ -7,7 +7,9 @@
 #'
 #' @param GeoRef_Standards_path The Georeferenced standards layer. Use the GDB file in the GIS library
 #' @param relation_table The excel doc with the relationship tables for the standards layer. Should be on the sharepoint site
-#' @param write_path The
+#' @param write_path The path to save the outputs
+#' @return Returns nothing. Saves 2 Rdata files and the strd layer display csv to write_path
+#' @export
 
 
 strd_lyr_display <- function(GeoRef_Standards_path,
