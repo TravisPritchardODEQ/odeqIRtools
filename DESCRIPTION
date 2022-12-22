@@ -1,7 +1,7 @@
 Package: odeqIRtools
 Type: Package
 Title: Tools used in Oregon DEQ's Integrated Report Assessment
-Version: 0.2.0
+Version: 0.3.0
 Author: Travis Pritchard
 Maintainer: Travis Pritchard <Pritchard.Travis@deq.state.or.us>
 Description: More about what it does (maybe more than one line)
@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/TravisPritchardODEQ/odeqIRtools
 BugReports: https://github.com/TravisPritchardODEQ/odeqIRtools/issues
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Imports: 
     magrittr,
     dplyr (>= 1.0.3),
@@ -22,6 +22,7 @@ Imports:
     sf,
     stringr,
     geojsonsf,
-    httr
+    httr,
+    assertthat
 Depends: 
     R (>= 2.10)
