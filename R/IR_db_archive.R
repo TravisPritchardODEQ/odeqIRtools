@@ -20,6 +20,6 @@ archive_IRdb <- function(IR_cycle, db){
   con <- DBI::dbConnect(odbc::odbc(), db)
 
   DBI::dbSendQuery(con,glue::glue_sql("EXEC archive_cycle @ir_year = {IR_cycle}", .con = con))
-
+  dbDisconnect(con)
 
 }
