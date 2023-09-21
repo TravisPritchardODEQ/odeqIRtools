@@ -350,7 +350,7 @@ NOAA_air <- bind_rows(map(NOAA_air_temp, "result"))
 
 
 # errors ----------------------------------------------------------------------------------------------------------
-
+# Run this until there are no more 503 errors returned from the datapull.
 
   error_stations <- setdiff(air_temp_stations, NOAA_air$STATION)
 
@@ -461,6 +461,8 @@ OR_usable_air_stations <- OR_air_temp %>%
          Latitude = Air_temp_lat) |>
   distinct()
 
+#These coordinates are in the GCS_WGS_1984 coordinate system
+    #Source: https://graphical.weather.gov/docs/ndfdSRS.htm
 write.csv(OR_usable_air_stations, 'data-raw/NOAA_usable_airstations.csv',
           row.names = FALSE)
 

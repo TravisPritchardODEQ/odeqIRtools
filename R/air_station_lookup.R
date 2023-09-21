@@ -21,7 +21,7 @@ distinct_mlocs <- df %>%
 monlocs_sf <- sf::st_as_sf(distinct_mlocs, coords=c(long_col ,lat_col), crs = sf::st_crs(Airtemp_stations_sf))
 
 intersection <- data.frame(sf::st_intersection(Airtemp_stations_sf, monlocs_sf)) %>%
-  dplyr::select(dplyr::all_of(monloc_col), Air_Station , Air_Station_Name)
+  dplyr::select(dplyr::all_of(monloc_col), Air_Station )
 
 rejoined <- df %>%
   dplyr::left_join(intersection, by = monloc_col )
