@@ -338,44 +338,60 @@ air_temp_stations <-c(
   "USR0000OZIM"
 )
 
+# Rather than replacing the errors with values, safely() returns both the results and the errors in a list. This
+# function is also a wrapper function. It defaults to using otherwise = NULL, and I generally haven’t had reason
+# to change away from that default.
+noaa_air_safe <- safely(.f = noaa_air)
 
 NOAA_air_temp <- air_temp_stations %>%
-  map(noaa_air, '2010-12-26', '2020-12-31') %>%
-  bind_rows()
+  map(noaa_air_safe, '2010-12-26', '2022-12-31')
+
+NOAA_air <- bind_rows(map(NOAA_air_temp, "result"))
 
 
+# errors ----------------------------------------------------------------------------------------------------------
 
+
+  error_stations <- setdiff(air_temp_stations, NOAA_air$STATION)
+
+  NOAA_air_temp_error <- error_stations %>%
+    map(noaa_air_safe, '2010-12-26', '2022-12-31')
+
+  NOAA_air_errors <- bind_rows(map(NOAA_air_temp_error, "result"))
+
+
+  NOAA_air <- bind_rows(NOAA_air, NOAA_air_errors)
 
 # Calculate air exclusion thresholds for each station -------------------------------------------------------------
 
 
-a <- Sys.time()
-air_temp_7d <- NOAA_air_temp %>%
-  dplyr::filter(!is.na(TMAX)) %>%
-  dplyr::mutate(DATE = lubridate::ymd(DATE),
-                TMAX = as.numeric(TMAX)) %>%
-  dplyr::group_by(STATION) %>%
-  dplyr::mutate(row = dplyr::row_number(),
-                d = runner(x = data.frame(dDTmax_run = TMAX,
-                                          date_run = DATE),
-                           k = "7 days",
-                           lag = 0,
-                           idx = DATE,
-                           f = function(x) list(x))) %>%
-  dplyr::mutate(d = purrr::map(d, ~ .x %>%
-                                 dplyr::summarise(ma.max7 = dplyr::case_when(length(dDTmax_run) >= 6 ~  mean(dDTmax_run),
-                                                                             TRUE ~ NA_real_),
-                                                  ana_startdate7 = min(date_run),
-                                                  ana_enddate7   = max(date_run),
-                                                  act_enddate7   = max(date_run),
-                                                  comment =dplyr::case_when(length(dDTmax_run) < 6 ~  'Not enough values to calculate 7 day metric',
-                                                                            TRUE ~ NA_character_) )
+  a <- Sys.time()
+  air_temp_7d <- NOAA_air %>%
+    dplyr::filter(!is.na(TMAX)) %>%
+    dplyr::mutate(DATE = lubridate::ymd(DATE),
+                  TMAX = as.numeric(TMAX)) %>%
+    dplyr::group_by(STATION) %>%
+    dplyr::mutate(row = dplyr::row_number(),
+                  d = runner(x = data.frame(dDTmax_run = TMAX,
+                                            date_run = DATE),
+                             k = "7 days",
+                             lag = 0,
+                             idx = DATE,
+                             f = function(x) list(x))) %>%
+    dplyr::mutate(d = purrr::map(d, ~ .x %>%
+                                   dplyr::summarise(ma.max7 = dplyr::case_when(length(dDTmax_run) >= 6 ~  mean(dDTmax_run),
+                                                                               TRUE ~ NA_real_),
+                                                    ana_startdate7 = min(date_run),
+                                                    ana_enddate7   = max(date_run),
+                                                    act_enddate7   = max(date_run),
+                                                    comment =dplyr::case_when(length(dDTmax_run) < 6 ~  'Not enough values to calculate 7 day metric',
+                                                                              TRUE ~ NA_character_) )
 
-  )) %>%
-  tidyr::unnest_wider(d) %>%
-  dplyr::filter(DATE >= lubridate::ymd('2011-01-01'))
+    )) %>%
+    tidyr::unnest_wider(d) %>%
+    dplyr::filter(DATE >= lubridate::ymd('2012-01-01'))
 
-Sys.time() - a
+  Sys.time() - a
 
 
 air_temp_7d_2 <- air_temp_7d %>%
@@ -409,7 +425,7 @@ OR_air_temp <- air_temp_7d %>%
          Air_temp_lat = LATITUDE,
          Date = DATE,
          Air_Temp_daily_max = TMAX) %>%
- left_join(OR_airtemp_exclusion_thresholds) %>%
+ left_join(OR_airtemp_exclusion_thresholds, by = c('Air_Station' = 'Air_temp_station')) %>%
   mutate(above_exclusion_1d = case_when(Air_Temp_daily_max > air_temp_exclusion_value ~ "Yes",
                                      Air_Temp_daily_max <=  air_temp_exclusion_value ~ "No",
                                      TRUE ~ "ERROR") ) %>%
@@ -440,9 +456,11 @@ usethis::use_data(OR_air_temp, overwrite = TRUE)
 #Import this in ARCGIS and calculate shp file of polygons
 #save shp file to Air_temp_stations
 OR_usable_air_stations <- OR_air_temp %>%
-  select(STATION, NAME, LATITUDE, LONGITUDE) %>%
+  select(Air_Station,  Air_temp_lat, Air_temp_long) %>%
+  rename(Longitude = Air_temp_long,
+         Latitude = Air_temp_lat) |>
   distinct()
 
-write.csv(OR_usable_air_stations, '\\deqlab1\Assessment\Integrated_Report\DataSources\2022\NOAA air temp\NOAA_usable_airstations.csv',
+write.csv(OR_usable_air_stations, 'data-raw/NOAA_usable_airstations.csv',
           row.names = FALSE)
 
