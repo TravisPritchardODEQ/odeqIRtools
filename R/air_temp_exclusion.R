@@ -31,7 +31,11 @@ air_temp_exclusion <- function(df, date_col = 'Date', monloc_col= 'MLocID',
   join_data <- join_air_station %>%
     dplyr::left_join(dplyr::select(OR_air_temp, Air_Station, Date, Air_Temp_daily_max,
                                    air_temp_exclusion_value, above_exclusion_1d, above_exclusion_7d),
-                     by = c('Air_Station', by_date ) )
+                     by = c('Air_Station', by_date ) ) |>
+    mutate(above_exclusion_1d = case_when(is.na(above_exclusion_1d) ~ 'No',
+                                          TRUE ~ above_exclusion_1d),
+           above_exclusion_7d = case_when(is.na(above_exclusion_7d) ~ 'No',
+                                          TRUE ~ above_exclusion_7d))
 
   return(join_data)
 
