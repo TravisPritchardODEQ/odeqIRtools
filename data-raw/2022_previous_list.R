@@ -17,9 +17,8 @@ prev_list_AU <- prev_list_AU_import |>
 prev_list_GNIS_import <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report - IR 2024/Previous List Data/GNIS_rollup_final.xlsx")
 
 prev_list_GNIS <- prev_list_GNIS_import |>
-  select(AU_ID, AU_GNIS_Name, Pollutant, Pollu_ID, wqstd_code, period, GNIS_22_category, Rationale) |>
-  rename(prev_GNIS_category = GNIS_22_category,
-         prev_GNIS_rationale = Rationale)
+  select(AU_ID, AU_GNIS_Name, Pollutant, Pollu_ID, wqstd_code, period, GNIS_final_category, Rationale) |>
+  rename(prev_GNIS_rationale = Rationale)
 
 
 prev_list_MLoc_import <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report - IR 2024/Previous List Data/MLoc_rollup_final.xlsx")
@@ -33,8 +32,8 @@ prev_list_delist <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report -
 
 save(prev_list_AU, prev_list_GNIS, prev_list_Mloc, prev_list_delist, file = 'data-raw/previous_list.Rdata')
 
-usethis::use_data(prev_list_AU)
-usethis::use_data(prev_list_GNIS)
-usethis::use_data(prev_list_Mloc)
-usethis::use_data(prev_list_delist)
+usethis::use_data(prev_list_AU,overwrite = TRUE)
+usethis::use_data(prev_list_GNIS, overwrite = TRUE)
+usethis::use_data(prev_list_Mloc, overwrite = TRUE)
+usethis::use_data(prev_list_delist, overwrite = TRUE)
 
