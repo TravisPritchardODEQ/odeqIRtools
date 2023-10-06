@@ -17,27 +17,39 @@ join_prev_assessments <- function(df, AU_type){
 
   # test dataset ----------------------------------------------------------------------------------------------------
 
-  # df <- other_category
-  # AU_type <- "Other"
+  # df <- WS_GNIS_rollup
+  # AU_type <- "WS"
 
   if(AU_type == "WS"){
 
 
     df_names <- names(df)
 
+    param_GNIS <- prev_list_GNIS |>
+      filter(Pollu_ID %in% df$Pollu_ID,
+             wqstd_code %in% df$wqstd_code,
+             period %in% df$period)
 
-    GNIS_join <- df %>%
-      mutate(AU_GNIS = str_c(AU_ID, AU_GNIS_Name, sep = ";"),
-             Pollu_ID = as.character(Pollu_ID),
-             wqstd_code = as.character(wqstd_code)) %>%
-      left_join(select(WS_GNIS_previous_listings, -Char_Name)) %>%
-      select(all_of(df_names), GNIS_previous_IR_impairement)
+    GNIS_join <- df |>
+      mutate(#AU_GNIS = str_c(AU_ID, AU_GNIS_Name, sep = ";"),
+        Pollu_ID = as.character(Pollu_ID),
+        wqstd_code = as.character(wqstd_code)) |>
+      full_join(select(param_GNIS, -Pollutant), join_by(AU_ID, AU_GNIS_Name, Pollu_ID, wqstd_code, period)) |>
+      rename(prev_GNIS_cat = GNIS_final_category) |>
+      mutate(IR_category_GNIS_24 = case_when(is.na(IR_category_GNIS_24) ~ "Unassessed",
+                                             TRUE ~ IR_category_GNIS_24)) |>
+      mutate(prev_GNIS_rationale = case_when(!is.na(prev_GNIS_rationale) ~ paste("2022 rationale:", prev_GNIS_rationale),
+                                             is.na(prev_GNIS_rationale) ~ "See previous IR"
+
+      ))
 
     GNIS_join_names <- names(GNIS_join)
 
     overall_join <- GNIS_join %>%
-      left_join(select(AU_previous_categories, -Char_Name)) %>%
-      select(all_of(GNIS_join_names), AU_previous_IR_category)
+      left_join(select(prev_list_AU, -Pollutant)) %>%
+      select(all_of(GNIS_join_names), prev_category, prev_rationale)
+
+
   } else {
 
     # non-watershed ---------------------------------------------------------------------------------------------------
@@ -45,7 +57,7 @@ join_prev_assessments <- function(df, AU_type){
 
     df_names <- names(df)
 
-     overall_join <- df %>%
+    overall_join <- df %>%
       mutate(Pollu_ID = as.character(Pollu_ID),
              wqstd_code = as.character(wqstd_code)) %>%
       left_join(select(AU_previous_categories, -Char_Name)) %>%
@@ -53,11 +65,11 @@ join_prev_assessments <- function(df, AU_type){
 
   }
 
-  if(nrow(df) != nrow(overall_join)){
-
-    stop("Previous IR category join error. Input and output dataframes are not the same length.")
-  }
-
+  # if(nrow(df) != nrow(overall_join)){
+  #
+  #   stop("Previous IR category join error. Input and output dataframes are not the same length.")
+  # }
+  #
 
   return(overall_join)
 }
