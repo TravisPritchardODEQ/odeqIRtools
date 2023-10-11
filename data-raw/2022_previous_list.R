@@ -18,13 +18,16 @@ prev_list_GNIS_import <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Rep
 
 prev_list_GNIS <- prev_list_GNIS_import |>
   select(AU_ID, AU_GNIS_Name, Pollutant, Pollu_ID, wqstd_code, period, GNIS_final_category, Rationale) |>
-  rename(prev_GNIS_rationale = Rationale)
+  rename(prev_GNIS_category = GNIS_final_category,
+         prev_GNIS_rationale = Rationale)
 
 
 prev_list_MLoc_import <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report - IR 2024/Previous List Data/MLoc_rollup_final.xlsx")
 
 prev_list_Mloc <- prev_list_MLoc_import |>
-  select(AU_ID, MLocID, Pollutant, Pollu_ID, wqstd_code, period, MLocID_IR_category, Rationale)
+  select(AU_ID, MLocID, Pollutant, Pollu_ID, wqstd_code, period, MLocID_IR_category, Rationale) |>
+  rename(prev_MLoc_category = MLocID_IR_category,
+         prev_MLoc_rationale = Rationale)
 
 
 prev_list_delist <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report - IR 2024/Previous List Data/Error Delistings.xlsx")
