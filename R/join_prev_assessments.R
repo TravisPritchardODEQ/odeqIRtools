@@ -22,7 +22,6 @@ join_prev_assessments <- function(df, AU_type){
 
   if(AU_type == "WS"){
 
-
     df_names <- names(df)
 
     param_GNIS <- prev_list_GNIS |>
@@ -31,23 +30,34 @@ join_prev_assessments <- function(df, AU_type){
              period %in% df$period)
 
     GNIS_join <- df |>
+      ungroup() |>
       mutate(#AU_GNIS = str_c(AU_ID, AU_GNIS_Name, sep = ";"),
         Pollu_ID = as.character(Pollu_ID),
         wqstd_code = as.character(wqstd_code)) |>
       full_join(select(param_GNIS, -Pollutant), join_by(AU_ID, AU_GNIS_Name, Pollu_ID, wqstd_code, period)) |>
-      rename(prev_GNIS_cat = GNIS_final_category) |>
       mutate(IR_category_GNIS_24 = case_when(is.na(IR_category_GNIS_24) ~ "Unassessed",
                                              TRUE ~ IR_category_GNIS_24)) |>
       mutate(prev_GNIS_rationale = case_when(!is.na(prev_GNIS_rationale) ~ paste("2022 rationale:", prev_GNIS_rationale),
-                                             is.na(prev_GNIS_rationale) ~ "See previous IR"
-
-      ))
+                                             !is.na(prev_GNIS_category) & is.na(prev_GNIS_rationale) ~ "See previous IR reports",
+                                             TRUE ~ prev_GNIS_rationale),
+             prev_GNIS_category = case_when(is.na(prev_GNIS_category) ~ "Unassessed",
+                                            TRUE ~ prev_GNIS_category)) |>
+      mutate(IR_category_GNIS_24 = factor(IR_category_GNIS_24, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE),
+             prev_GNIS_category = factor(prev_GNIS_category, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE)) |>
+      mutate(final_GNIS_cat = pmax(IR_category_GNIS_24,prev_GNIS_category )) |>
+      arrange(AU_ID, AU_GNIS_Name)
 
     GNIS_join_names <- names(GNIS_join)
 
+
+
     overall_join <- GNIS_join %>%
       left_join(select(prev_list_AU, -Pollutant)) %>%
-      select(all_of(GNIS_join_names), prev_category, prev_rationale)
+      select(all_of(GNIS_join_names), prev_category, prev_rationale) |>
+      rename(prev_AU_category = prev_category,
+             prev_AU_rationale = prev_rationale)
+
+
 
 
   } else {
