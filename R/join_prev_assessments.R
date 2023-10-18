@@ -88,7 +88,7 @@ join_prev_assessments <- function(df, AU_type){
       mutate(final_AU_cat = pmax(prev_category, IR_category, na.rm = TRUE) )
   }
 
-  }
+
 
   # if(nrow(df) != nrow(overall_join)){
   #
