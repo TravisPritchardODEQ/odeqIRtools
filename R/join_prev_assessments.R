@@ -65,13 +65,28 @@ join_prev_assessments <- function(df, AU_type){
     # non-watershed ---------------------------------------------------------------------------------------------------
 
 
+
     df_names <- names(df)
+
+    param_AU_previous_categories <- prev_list_AU |>
+      filter(Pollu_ID %in% df$Pollu_ID,
+             wqstd_code %in% df$wqstd_code,
+             period %in% df$period)
+
+
 
     overall_join <- df %>%
       mutate(Pollu_ID = as.character(Pollu_ID),
              wqstd_code = as.character(wqstd_code)) %>%
-      left_join(select(AU_previous_categories, -Char_Name)) %>%
-      select(all_of(df_names), AU_previous_IR_category)
+      full_join(select(param_AU_previous_categories, -Pollutant)) |>
+      mutate(IR_category = case_when( is.na(IR_category) ~ "Unassessed",
+                                      TRUE ~IR_category )) |>
+      mutate(prev_category = case_when(is.na(prev_category) ~ "Unassessed",
+                                       TRUE ~ prev_category)) |>
+      mutate(IR_category = factor(IR_category, levels=c("Unassessed",'3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE),
+             prev_category = factor(prev_category, levels=c("Unassessed",'3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE)) |>
+      mutate(final_AU_cat = pmax(prev_category, IR_category, na.rm = TRUE) )
+  }
 
   }
 
