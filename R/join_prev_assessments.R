@@ -71,7 +71,8 @@ join_prev_assessments <- function(df, AU_type){
     param_AU_previous_categories <- prev_list_AU |>
       filter(Pollu_ID %in% df$Pollu_ID,
              wqstd_code %in% df$wqstd_code,
-             period %in% df$period)
+             period %in% df$period) |>
+      filter(str_detect(AU_ID, "WS", negate = TRUE))
 
 
 
