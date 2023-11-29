@@ -3,18 +3,19 @@
 #' This function rolls up GNIS assessments to the AU scale.
 #'
 #' @param df input dataframe of GNIS assessments
+#' @param char_name_field field that contains the characteristuc name.No quotes.
 #' @export
 
 
 
 
-rollup_WS_AU <- function(df){
+rollup_WS_AU <- function(df, char_name_field){
 
   WS_AU_rollup <- df |>
     ungroup() %>%
     mutate(Rationale_GNIS = case_when(!is.na(Rationale_GNIS) ~ paste0(AU_GNIS_Name, ": ",Rationale_GNIS ),
                                       TRUE ~ Rationale_GNIS)) |>
-    group_by(AU_ID, Pollu_ID, wqstd_code, period,prev_AU_category,prev_AU_rationale) %>%
+    group_by(AU_ID, {{char_name_field}}, Pollu_ID, wqstd_code, period,prev_AU_category,prev_AU_rationale) %>%
     summarise(IR_category_AU_24 = max(final_GNIS_cat),
               Rationale_AU = str_c(Rationale_GNIS,collapse =  " ~ " ) ) %>%
     mutate(recordID = paste0("2024-",odeqIRtools::unique_AU(AU_ID),"-", Pollu_ID, "-", wqstd_code,"-", period )) |>
