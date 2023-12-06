@@ -3,7 +3,7 @@
 #' This function rolls up GNIS assessments to the AU scale.
 #'
 #' @param df input dataframe of GNIS assessments
-#' @param char_name_field field that contains the characteristuc name.No quotes.
+#' @param char_name_field field that contains the characteristic name.No quotes.
 #' @export
 
 
