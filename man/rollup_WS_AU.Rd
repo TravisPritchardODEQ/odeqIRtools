@@ -9,7 +9,7 @@ rollup_WS_AU(df, char_name_field)
 \arguments{
 \item{df}{input dataframe of GNIS assessments}
 
-\item{char_name_field}{field that contains the characteristuc name.No quotes.}
+\item{char_name_field}{field that contains the characteristic name.No quotes.}
 }
 \description{
 This function rolls up GNIS assessments to the AU scale.
