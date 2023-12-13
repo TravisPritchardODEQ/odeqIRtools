@@ -20,7 +20,7 @@ rollup_WS_AU <- function(df, char_name_field){
               Rationale_AU = str_c(Rationale_GNIS,collapse =  " ~ " ) ) %>%
     ungroup() |>
     mutate(IR_category_AU_24 = case_when( str_detect(IR_category_AU_24, "3") & str_detect(prev_AU_category, "2|5") ~ prev_AU_category,
-                                          .default ~ IR_category_AU_24)) |>
+                                          TRUE ~ IR_category_AU_24)) |>
     mutate(recordID = paste0("2024-",odeqIRtools::unique_AU(AU_ID),"-", Pollu_ID, "-", wqstd_code,"-", period )) |>
     mutate(status_change = case_when(IR_category_AU_24 == prev_AU_category & is.na(Rationale_AU) ~ "No change in status- No New Assessment",
                                      IR_category_AU_24 == prev_AU_category & !is.na(Rationale_AU)~ "No change in status- New Assessment",
