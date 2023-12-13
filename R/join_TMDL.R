@@ -49,10 +49,10 @@ join_TMDL <- function(df, type){
       dplyr::filter(TMDL_status == 'Active') |>
       dplyr::select(AU_ID, action_id, Pollu_ID, Period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
       dplyr::group_by(AU_ID, Pollu_ID, Period) |>
-      dplyr::summarise(action_ids =  stringr::str_c(action_id, collapse = "; "),
-                       TMDL_pollutants = stringr::str_c(TMDL_pollutant, collapse = "; "),
-                       TMDL_Periods = stringr::str_c(TMDL_Period, collapse = "; "),
-                       TMDL_Periods = stringr::str_c(TMDL_Period, collapse = "; ")) |>
+      dplyr::summarise(action_ids =  stringr::str_c(unique(action_id), collapse = "; "),
+                       TMDL_pollutants = stringr::str_c(unique(TMDL_pollutant), collapse = "; "),
+                       TMDL_Periods = stringr::str_c(unique(TMDL_Period), collapse = "; "),
+                       TMDL_Periods = stringr::str_c(unique(TMDL_Period), collapse = "; ")) |>
       dplyr::mutate(Pollu_ID = as.character(Pollu_ID))
 
     AU_display_TMDL <- df |>
@@ -80,8 +80,8 @@ join_TMDL <- function(df, type){
       dplyr::select(AU_ID, AU_GNIS_Name, action_id, Pollu_ID, Period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
       dplyr::group_by(AU_ID, AU_GNIS_Name, Pollu_ID, Period) |>
       dplyr::summarise(action_ids =  stringr::str_c(str_unique(action_id), collapse = "; "),
-                       TMDL_pollutants = stringr::str_c(TMDL_pollutant, collapse = "; "),
-                       TMDL_Periods = stringr::str_c(TMDL_Period, collapse = "; ")) |>
+                       TMDL_pollutants = stringr::str_c(unique(TMDL_pollutant), collapse = "; "),
+                       TMDL_Periods = stringr::str_c(str_unique(TMDL_Period), collapse = "; ")) |>
       dplyr::mutate(Pollu_ID = as.character(Pollu_ID))
 
 

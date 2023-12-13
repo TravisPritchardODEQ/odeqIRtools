@@ -49,7 +49,7 @@ assess_delist <- function(df, type = NULL){
                                        prev_category == '2' & final_AU_cat  %in% c('5','4A','4B', '4C') ~ "Attain to Impaired",
                                        prev_category %in% c('3D','3','3B', '3C') & final_AU_cat %in% c('5','4A','4B', '4C') ~ "Insufficient to Impaired",
                                        prev_category %in% c('3D','3','3B', '3C') & final_AU_cat %in% c('2') ~ "Insufficient to Attain",
-                                       prev_GNIS_category %in% c('3D') & final_GNIS_cat %in% c('3') ~ "3D to Insufficient"
+                                       prev_category %in% c('3D') & final_AU_cat %in% c('3') ~ "3D to Insufficient"
       ))
 
   }
