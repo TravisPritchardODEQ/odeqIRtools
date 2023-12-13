@@ -31,8 +31,12 @@ assess_delist <- function(df, type = NULL){
                                      prev_GNIS_category == '2' & final_GNIS_cat  %in% c('5','4A','4B', '4C') ~ "Attain to Impaired",
                                      prev_GNIS_category %in% c('3D','3','3B', '3C') & final_GNIS_cat %in% c('5','4A','4B', '4C') ~ "Insufficient to Impaired",
                                      prev_GNIS_category %in% c('3D','3','3B', '3C') & final_GNIS_cat %in% c('2') ~ "Insufficient to Attain",
-                                     prev_GNIS_category %in% c('3D') & final_GNIS_cat %in% c('3') ~ "3D to Insufficient"
-    ))
+                                     prev_GNIS_category %in% c('3D') & final_GNIS_cat %in% c('3') ~ "3D to Insufficient",
+                                     prev_GNIS_category %in% c('4A') & final_GNIS_cat %in% c('5') ~ "4A to Category 5",
+                                     TRUE ~ paste0(prev_GNIS_category, ' to ', final_GNIS_cat )
+    )) |>
+    relocate(final_GNIS_cat, .after(period)) |>
+    relocate(Rationale_GNIS, .after(final_GNIS_cat))
   } else {
     delist_assessment <- df |>
       mutate(Delist_eligability = case_when( prev_category %in% c('5',  '4A') & IR_category == '2' & Delist_eligability ==1 ~ "Delist Eligible",
@@ -49,8 +53,12 @@ assess_delist <- function(df, type = NULL){
                                        prev_category == '2' & final_AU_cat  %in% c('5','4A','4B', '4C') ~ "Attain to Impaired",
                                        prev_category %in% c('3D','3','3B', '3C') & final_AU_cat %in% c('5','4A','4B', '4C') ~ "Insufficient to Impaired",
                                        prev_category %in% c('3D','3','3B', '3C') & final_AU_cat %in% c('2') ~ "Insufficient to Attain",
-                                       prev_category %in% c('3D') & final_AU_cat %in% c('3') ~ "3D to Insufficient"
-      ))
+                                       prev_category %in% c('3D') & final_AU_cat %in% c('3') ~ "3D to Insufficient",
+                                       prev_category %in% c('4A') & final_AU_cat %in% c('5') ~ "4A to Category 5",
+                                       TRUE ~ paste0(prev_category, 'to ', final_AU_cat)
+      )) |>
+      relocate(final_AU_cat, .after(period)) |>
+      relocate(Rationale, .after(final_AU_cat))
 
   }
 
