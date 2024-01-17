@@ -17,9 +17,9 @@ join_TMDL <- function(df, type){
   tmdl_actual_periods <- tibble::tribble(
                                               ~Period, ~Actual_period,
                                                "Both",   "year_round",
-                                               "Both",     "spawning",
+                                               "Both",     "spawn",
                            "Mixed (Both, year_round)",   "year_round",
-                           "Mixed (Both, year_round)",     "spawning"
+                           "Mixed (Both, year_round)",     "spawn"
                            )
 
 
