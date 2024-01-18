@@ -24,6 +24,9 @@ join_TMDL <- function(df, type){
 
 
 
+  tmdl_names <- odeqtmdl::tmdl_actions |>
+    dplyr::select(action_id, TMDL_name) |>
+    dplyr::distinct()
 
 
 
@@ -40,16 +43,19 @@ join_TMDL <- function(df, type){
     tmdl_au0 <- odeqtmdl::tmdl_au |>
       dplyr::left_join(tmdl_actual_periods, relationship = "many-to-many") |>
       dplyr::rename(TMDL_Period = Period,
-                    period = Actual_period)
+                    period = Actual_period) |>
+      dplyr::left_join(tmdl_names)
+
 
     TMDLs <- tmdl_au0 %>%
       dplyr::filter(TMDL_scope == "TMDL") |>
       dplyr::left_join(odeqtmdl::tmdl_parameters[, c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant", "TMDL_status")],
                        by = c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant")) %>%
       dplyr::filter(TMDL_status == 'Active') |>
-      dplyr::select(AU_ID, action_id, Pollu_ID, period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
+      dplyr::select(AU_ID, TMDL_name, action_id, Pollu_ID, period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
       dplyr::group_by(AU_ID, Pollu_ID, period) |>
-      dplyr::summarise(action_ids =  stringr::str_c(unique(action_id), collapse = "; "),
+      dplyr::summarise(TMDLs =  stringr::str_c(unique(TMDL_name), collapse = "; "),
+                       action_ids =  stringr::str_c(unique(action_id), collapse = "; "),
                        TMDL_pollutants = stringr::str_c(unique(TMDL_pollutant), collapse = "; "),
                        TMDL_Periods = stringr::str_c(unique(TMDL_Period), collapse = "; "),
                        TMDL_Periods = stringr::str_c(unique(TMDL_Period), collapse = "; ")) |>
@@ -68,7 +74,8 @@ join_TMDL <- function(df, type){
     tmdl_au_gnis0 <- odeqtmdl::tmdl_au_gnis |>
       dplyr::left_join(tmdl_actual_periods, relationship = "many-to-many") |>
       dplyr::rename(TMDL_Period = Period,
-                    period = Actual_period)
+                    period = Actual_period)|>
+      dplyr::left_join(tmdl_names)
 
 
     TMDL_GNIS <- tmdl_au_gnis0 |>
@@ -77,9 +84,10 @@ join_TMDL <- function(df, type){
       dplyr::left_join(odeqtmdl::tmdl_parameters[, c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant", "TMDL_status")],
                        by = c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant")) %>%
       dplyr::filter(TMDL_status == 'Active') |>
-      dplyr::select(AU_ID, AU_GNIS_Name, action_id, Pollu_ID, period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
+      dplyr::select(AU_ID, AU_GNIS_Name, TMDL_name, action_id, Pollu_ID, period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
       dplyr::group_by(AU_ID, AU_GNIS_Name, Pollu_ID, period) |>
-      dplyr::summarise(action_ids =  stringr::str_c(str_unique(action_id), collapse = "; "),
+      dplyr::summarise(TMDLs =  stringr::str_c(unique(TMDL_name), collapse = "; "),
+                       action_ids =  stringr::str_c(str_unique(action_id), collapse = "; "),
                        TMDL_pollutants = stringr::str_c(unique(TMDL_pollutant), collapse = "; "),
                        TMDL_Periods = stringr::str_c(str_unique(TMDL_Period), collapse = "; ")) |>
       dplyr::mutate(Pollu_ID = as.character(Pollu_ID))
