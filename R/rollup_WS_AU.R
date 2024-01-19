@@ -30,7 +30,7 @@ rollup_WS_AU <- function(df, char_name_field){
                                      prev_AU_category == '2' & IR_category_AU_24  %in% c('5','4A','4B', '4C') ~ "Attain to Impaired",
                                      prev_AU_category %in% c('3D','3','3B', '3C') & IR_category_AU_24 %in% c('5','4A','4B', '4C') ~ "Insufficient to Impaired",
                                      prev_AU_category %in% c('3D','3','3B', '3C') & IR_category_AU_24 %in% c('2') ~ "Insufficient to Attain",
-                                     TRUE ~ paste(prev_AU_category, 'to'IR_category_AU_24 )
+                                     TRUE ~ paste(prev_AU_category, 'to', IR_category_AU_24 )
     ))
 
 
