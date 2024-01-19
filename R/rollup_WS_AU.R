@@ -16,7 +16,8 @@ rollup_WS_AU <- function(df, char_name_field){
     mutate(Rationale_GNIS = case_when(!is.na(Rationale_GNIS) ~ paste0(AU_GNIS_Name, ": ",Rationale_GNIS ),
                                       TRUE ~ Rationale_GNIS)) |>
     group_by(AU_ID, {{char_name_field}}, Pollu_ID, wqstd_code, period,prev_AU_category,prev_AU_rationale) %>%
-    summarise(IR_category_AU_24 = max(final_GNIS_cat),
+    summarise( stations =  stringr::str_c(unique(stations), collapse = "; "),
+               IR_category_AU_24 = max(final_GNIS_cat),
               Rationale_AU = str_c(Rationale_GNIS,collapse =  " ~ " ) ) %>%
     ungroup() |>
     mutate(IR_category_AU_24 = case_when( str_detect(IR_category_AU_24, "3") & str_detect(prev_AU_category, "2|5") ~ prev_AU_category,
