@@ -38,6 +38,13 @@ prev_list_Mloc <- prev_list_MLoc_import |>
 
 prev_list_delist <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report - IR 2024/Previous List Data/Error Delistings.xlsx")
 
+# Updates ---------------------------------------------------------------------------------------------------------
+prev_list_AU <- prev_list_AU |>
+  dplyr::mutate(Pollu_ID = dplyr::case_when(wqstd_code == '15' & Pollu_ID %in% c('77','78','79' ) ~ '77',
+                                            TRUE ~ Pollu_ID),
+                Pollutant = dplyr::case_when(wqstd_code == '15' & Pollu_ID %in% c('77','78','79' ) ~ 'Endosulfan',
+                                             TRUE ~ Pollutant))
+
 
 save(prev_list_AU, prev_list_GNIS, prev_list_Mloc, prev_list_delist, file = 'data-raw/previous_list.Rdata')
 
@@ -45,4 +52,8 @@ usethis::use_data(prev_list_AU,overwrite = TRUE)
 usethis::use_data(prev_list_GNIS, overwrite = TRUE)
 usethis::use_data(prev_list_Mloc, overwrite = TRUE)
 usethis::use_data(prev_list_delist, overwrite = TRUE)
+
+
+
+
 
