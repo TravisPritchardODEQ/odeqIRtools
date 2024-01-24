@@ -16,7 +16,7 @@ WS_AU_prev_list <- function(df){
                                      IR_category_AU_24  %in% c('5','4A','4B', '4C') &
                                      is.na(Year_listed) ~ '2024',
                                    TRUE ~ Year_listed),
-           year_last_assessed = case_when(status_change != 'No change in status- No New assessment' ~"2024",
+           year_last_assessed = case_when(status_change != 'No change in status- No new assessment' ~"2024",
                                           TRUE ~ year_last_assessed))
 
 }
