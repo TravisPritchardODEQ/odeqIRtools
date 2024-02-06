@@ -13,7 +13,7 @@
 data_aggregation <- function(df){
 
 data_to_agg <- df %>%
-  left_join(aggregare_data) %>%
+  left_join(aggregate_data) %>%
   filter(!is.na(group_num)) %>%
   arrange(group_num) %>%
   group_by(group_num) %>%
