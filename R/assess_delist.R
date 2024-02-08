@@ -18,7 +18,7 @@ assess_delist <- function(df, type = NULL){
 
   delist_assessment <- df |>
     mutate(Delist_eligability = case_when( prev_GNIS_category %in% c('5',  '4A') & IR_category_GNIS_24 == '2' & Delist_eligability ==1 ~ "Delist Eligible",
-                                           prev_GNIS_category %in% c('5',  '4A') & IR_category_GNIS_24 == '2' & Delist_eligability < 1 ~ 'Insuffcient data to delist')) |>
+                                           prev_GNIS_category %in% c('5',  '4A') & IR_category_GNIS_24 == '2' & (Delist_eligability < 1 | is.na(Delist_eligability)) ~ 'Insuffcient data to delist')) |>
     mutate(final_GNIS_cat = case_when(Delist_eligability == "Delist Eligible" ~ '2',
                                       TRUE ~ final_GNIS_cat),
            Rationale_GNIS = case_when(Delist_eligability %in% c("Delist Eligible",'Insuffcient data to delist')  ~paste0(Delist_eligability, "- ", Rationale_GNIS),
@@ -40,7 +40,7 @@ assess_delist <- function(df, type = NULL){
   } else {
     delist_assessment <- df |>
       mutate(Delist_eligability = case_when( prev_category %in% c('5',  '4A') & IR_category == '2' & Delist_eligability ==1 ~ "Delist Eligible",
-                                             prev_category %in% c('5',  '4A') & IR_category == '2' & Delist_eligability ==1 ~ 'Insuffcient data to delist')) |>
+                                             prev_category %in% c('5',  '4A') & IR_category == '2' & (Delist_eligability < 1 | is.na(Delist_eligability)) ~ 'Insuffcient data to delist')) |>
       mutate(final_AU_cat = case_when(Delist_eligability == "Delist Eligible" ~ '2',
                                       TRUE ~ final_AU_cat),
              Rationale = case_when(Delist_eligability %in% c("Delist Eligible",'Insuffcient data to delist')  ~paste0(Delist_eligability, "- ", Rationale),
