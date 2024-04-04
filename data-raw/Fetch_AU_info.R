@@ -1,4 +1,5 @@
 library(arcgisbinding)
+library(tidyverse)
 arc.check_product()
 
 
@@ -14,8 +15,10 @@ watershed <-  arc.select(arc.open('https://services.arcgis.com/uUvqNMGPm7axC2dD/
 
 
 AU_info <- bind_rows(rivstream, waterbody, watershed) |>
-  filter(!is.na(HUC12))|>
-  filter(row_number() > 1)
+  filter(!is.na(HUC12)) |>
+  distinct()
+
+
 
 
 usethis::use_data(AU_info, overwrite = TRUE)
