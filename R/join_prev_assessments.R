@@ -42,8 +42,8 @@ join_prev_assessments <- function(df, AU_type){
                                              TRUE ~ prev_GNIS_rationale),
              prev_GNIS_category = case_when(is.na(prev_GNIS_category) ~ "Unassessed",
                                             TRUE ~ prev_GNIS_category)) |>
-      mutate(IR_category_GNIS_24 = factor(IR_category_GNIS_24, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE),
-             prev_GNIS_category = factor(prev_GNIS_category, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE)) |>
+      mutate(IR_category_GNIS_24 = factor(IR_category_GNIS_24, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE),
+             prev_GNIS_category = factor(prev_GNIS_category, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE)) |>
       mutate(final_GNIS_cat = pmax(IR_category_GNIS_24,prev_GNIS_category )) |>
       arrange(AU_ID, AU_GNIS_Name)
 
@@ -84,8 +84,8 @@ join_prev_assessments <- function(df, AU_type){
                                       TRUE ~IR_category )) |>
       mutate(prev_category = case_when(is.na(prev_category) ~ "Unassessed",
                                        TRUE ~ prev_category)) |>
-      mutate(IR_category = factor(IR_category, levels=c("Unassessed",'3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE),
-             prev_category = factor(prev_category, levels=c("Unassessed",'3D',"3", "3B","3C", "2", "5", '4A', '4B', '4C'), ordered=TRUE)) |>
+      mutate(IR_category = factor(IR_category, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE),
+             prev_category = factor(prev_category, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE)) |>
       mutate(final_AU_cat = pmax(prev_category, IR_category, na.rm = TRUE) )
   }
 
