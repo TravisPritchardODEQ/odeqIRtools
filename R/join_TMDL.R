@@ -29,6 +29,11 @@ join_TMDL <- function(df, type){
     dplyr::distinct()
 
 
+  tmdl_ws <- odeqtmdl::tmdl_au |>
+    filter(!AU_ID == "99") |>
+    filter(action_id == "OR_TMDL_20240806b") %>%
+    pull(AU_ID) |>
+    unique()
 
 
   if(type == 'AU'){
@@ -39,8 +44,9 @@ join_TMDL <- function(df, type){
 
     # prep TMDL info --------------------------------------------------------------------------------------------------
 
-
+#filter out <= 1 % TMDL coverage- This reduces inclusion of dangles
     tmdl_au0 <- odeqtmdl::tmdl_au |>
+      dplyr::filter(TMDL_AU_Percent > 1) |>
       dplyr::left_join(tmdl_actual_periods, relationship = "many-to-many") |>
       dplyr::rename(TMDL_Period = Period,
                     period = Actual_period) |>
@@ -51,6 +57,8 @@ join_TMDL <- function(df, type){
       dplyr::filter(TMDL_scope == "TMDL") |>
       dplyr::left_join(odeqtmdl::tmdl_parameters[, c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant", "TMDL_status")],
                        by = c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant")) %>%
+      dplyr::mutate(TMDL_status = case_when(AU_ID %in% tmdl_ws & action_id == "30674" & Pollu_ID == 132 ~ "Not Active",
+                                     TRUE ~ TMDL_status)) |>
       dplyr::filter(TMDL_status == 'Active') |>
       dplyr::select(AU_ID, TMDL_name, action_id, Pollu_ID, period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
       dplyr::group_by(AU_ID, Pollu_ID, period) |>
