@@ -91,6 +91,8 @@ join_TMDL <- function(df, type){
       dplyr::mutate(AU_GNIS_Name = stringr::str_split_i(AU_GNIS, ";", 2)) |>
       dplyr::left_join(odeqtmdl::tmdl_parameters[, c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant", "TMDL_status")],
                        by = c("action_id", "TMDL_wq_limited_parameter", "TMDL_pollutant")) %>%
+      dplyr::mutate(TMDL_status = case_when(AU_ID %in% tmdl_ws & action_id == "30674" & Pollu_ID == 132 ~ "Not Active",
+                                            TRUE ~ TMDL_status)) |>
       dplyr::filter(TMDL_status == 'Active') |>
       dplyr::select(AU_ID, AU_GNIS_Name, TMDL_name, action_id, Pollu_ID, period, TMDL_Period, TMDL_pollutant, TMDL_status) |>
       dplyr::group_by(AU_ID, AU_GNIS_Name, Pollu_ID, period) |>
