@@ -16,6 +16,8 @@ join_TMDL <- function(df, type){
 
   tmdl_actual_periods <- tibble::tribble(
                                               ~Period, ~Actual_period,
+                                              "year_round", 'year_round',
+                                              'spawn', 'spawn',
                                                "Both",   "year_round",
                                                "Both",     "spawn",
                            "Mixed (Both, year_round)",   "year_round",
@@ -46,7 +48,7 @@ join_TMDL <- function(df, type){
 
 #filter out <= 1 % TMDL coverage- This reduces inclusion of dangles
     tmdl_au0 <- odeqtmdl::tmdl_au |>
-      dplyr::filter(TMDL_AU_Percent > 1) |>
+      #dplyr::filter(TMDL_AU_Percent > 1) |>
       dplyr::left_join(tmdl_actual_periods, relationship = "many-to-many") |>
       dplyr::rename(TMDL_Period = Period,
                     period = Actual_period) |>
