@@ -17,14 +17,14 @@ assess_delist <- function(df, type = NULL){
   if (type == 'WS'){
 
   delist_assessment <- df |>
-    mutate(Delist_eligability = case_when( prev_GNIS_category %in% c('5',  '4A', '5C') & IR_category_GNIS_24 == '2' & Delist_eligability ==1 ~ "Delist Eligible",
-                                           prev_GNIS_category %in% c('5',  '4A', '5C') & IR_category_GNIS_24 == '2' & (Delist_eligability < 1 | is.na(Delist_eligability)) ~ 'Insuffcient data to delist')) |>
+    mutate(Delist_eligability = case_when( prev_GNIS_category %in% c('5',  '4A', '5C') & IR_category_GNIS_26 == '2' & Delist_eligability ==1 ~ "Delist Eligible",
+                                           prev_GNIS_category %in% c('5',  '4A', '5C') & IR_category_GNIS_26 == '2' & (Delist_eligability < 1 | is.na(Delist_eligability)) ~ 'Insuffcient data to delist')) |>
     mutate(final_GNIS_cat = case_when(Delist_eligability == "Delist Eligible" ~ '2',
                                       TRUE ~ final_GNIS_cat),
            Rationale_GNIS = case_when(Delist_eligability %in% c("Delist Eligible",'Insuffcient data to delist')  ~paste0(Delist_eligability, "- ", Rationale_GNIS),
                                       TRUE ~ Rationale_GNIS)) |>
     mutate(final_GNIS_cat = factor(final_GNIS_cat,levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE)) |>
-    mutate(status_change = case_when(final_GNIS_cat == prev_GNIS_category & IR_category_GNIS_24 == 'Unassessed' ~ "No change in status- No new assessment",
+    mutate(status_change = case_when(final_GNIS_cat == prev_GNIS_category & IR_category_GNIS_26 == 'Unassessed' ~ "No change in status- No new assessment",
                                      final_GNIS_cat == prev_GNIS_category ~ "No change in status- Assessed",
                                      final_GNIS_cat == '2' & prev_GNIS_category %in% c('5','4A','4B', '4C', '5C') ~ "Delist",
                                      prev_GNIS_category == 'Unassessed' ~ "New Assessment",
