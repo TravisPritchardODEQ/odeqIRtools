@@ -91,11 +91,11 @@ join_prev_assessments <- function(df, AU_type){
 
 
 
-  # if(nrow(df) != nrow(overall_join)){
-  #
-  #   stop("Previous IR category join error. Input and output dataframes are not the same length.")
-  # }
-  #
+  if(nrow(df) != nrow(overall_join)){
+
+    warning("Previous IR category join error. Input and output dataframes are not the same length.")
+  }
+
 
   return(overall_join)
 }

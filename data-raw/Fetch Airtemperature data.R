@@ -344,7 +344,7 @@ air_temp_stations <-c(
 noaa_air_safe <- safely(.f = noaa_air)
 
 NOAA_air_temp <- air_temp_stations %>%
-  map(noaa_air_safe, '2010-12-26', '2022-12-31')
+  map(noaa_air_safe, '2014-12-26', '2024-12-31')
 
 NOAA_air <- bind_rows(map(NOAA_air_temp, "result"))
 
@@ -355,7 +355,7 @@ NOAA_air <- bind_rows(map(NOAA_air_temp, "result"))
   error_stations <- setdiff(air_temp_stations, NOAA_air$STATION)
 
   NOAA_air_temp_error <- error_stations %>%
-    map(noaa_air_safe, '2010-12-26', '2022-12-31')
+    map(noaa_air_safe, '2014-12-26', '2024-12-31')
 
   NOAA_air_errors <- bind_rows(map(NOAA_air_temp_error, "result"))
 
@@ -389,7 +389,7 @@ NOAA_air <- bind_rows(map(NOAA_air_temp, "result"))
 
     )) %>%
     tidyr::unnest_wider(d) %>%
-    dplyr::filter(DATE >= lubridate::ymd('2012-01-01'))
+    dplyr::filter(DATE >= lubridate::ymd('2014-01-01'))
 
   Sys.time() - a
 
@@ -454,6 +454,7 @@ usethis::use_data(OR_air_temp, overwrite = TRUE)
 # Generate list of usable stations --------------------------------------------------------------------------------
 
 #Import this in ARCGIS and calculate shp file of polygons
+#calculate Thiessen polygons
 #save shp file to Air_temp_stations
 OR_usable_air_stations <- OR_air_temp %>%
   select(Air_Station,  Air_temp_lat, Air_temp_long) %>%
