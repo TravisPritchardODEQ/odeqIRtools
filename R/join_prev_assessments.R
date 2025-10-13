@@ -35,16 +35,16 @@ join_prev_assessments <- function(df, AU_type){
         Pollu_ID = as.character(Pollu_ID),
         wqstd_code = as.character(wqstd_code)) |>
       full_join(select(param_GNIS, -Pollutant), join_by(AU_ID, AU_GNIS_Name, Pollu_ID, wqstd_code, period)) |>
-      mutate(IR_category_GNIS_24 = case_when(is.na(IR_category_GNIS_24) ~ "Unassessed",
-                                             TRUE ~ IR_category_GNIS_24)) |>
+      mutate(IR_category_GNIS_26 = case_when(is.na(IR_category_GNIS_26) ~ "Unassessed",
+                                             TRUE ~ IR_category_GNIS_26)) |>
       mutate(prev_GNIS_rationale = case_when(!is.na(prev_GNIS_rationale) ~ paste("2022 rationale:", prev_GNIS_rationale),
                                              !is.na(prev_GNIS_category) & is.na(prev_GNIS_rationale) ~ "See previous IR reports",
                                              TRUE ~ prev_GNIS_rationale),
              prev_GNIS_category = case_when(is.na(prev_GNIS_category) ~ "Unassessed",
                                             TRUE ~ prev_GNIS_category)) |>
-      mutate(IR_category_GNIS_24 = factor(IR_category_GNIS_24, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE),
+      mutate(IR_category_GNIS_26 = factor(IR_category_GNIS_26, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE),
              prev_GNIS_category = factor(prev_GNIS_category, levels=c('Unassessed', '3D',"3", "3B","3C", "2", "5",'5C', '4A', '4B', '4C'), ordered=TRUE)) |>
-      mutate(final_GNIS_cat = pmax(IR_category_GNIS_24,prev_GNIS_category )) |>
+      mutate(final_GNIS_cat = pmax(IR_category_GNIS_26,prev_GNIS_category )) |>
       arrange(AU_ID, AU_GNIS_Name)
 
     GNIS_join_names <- names(GNIS_join)

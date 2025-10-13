@@ -17,20 +17,20 @@ rollup_WS_AU <- function(df, char_name_field){
                                       TRUE ~ Rationale_GNIS)) |>
     group_by(AU_ID, {{char_name_field}}, Pollu_ID, wqstd_code, period,prev_AU_category,prev_AU_rationale) %>%
     summarise( stations =  stringr::str_c(unique(na.omit(stations)), collapse = "; "),
-               IR_category_AU_24 = max(final_GNIS_cat),
+               IR_category_AU_26 = max(final_GNIS_cat),
               Rationale_AU = str_c(na.omit(Rationale_GNIS),collapse =  " ~ " ) ) %>%
     ungroup() |>
-    mutate(IR_category_AU_24 = case_when( str_detect(IR_category_AU_24, "3") & str_detect(prev_AU_category, "2|5") ~ prev_AU_category,
-                                          TRUE ~ IR_category_AU_24)) |>
-    mutate(recordID = paste0("2024-",odeqIRtools::unique_AU(AU_ID),"-", Pollu_ID, "-", wqstd_code,"-", period )) |>
-    mutate(status_change = case_when(IR_category_AU_24 == prev_AU_category & is.na(Rationale_AU) ~ "No change in status- No new assessment",
-                                     IR_category_AU_24 == prev_AU_category & !is.na(Rationale_AU)~  "No change in status- Assessed",
-                                     IR_category_AU_24 == '2' & prev_AU_category %in% c('5','4A','4B', '4C') ~ "Delist",
+    mutate(IR_category_AU_26 = case_when( str_detect(IR_category_AU_26, "3") & str_detect(prev_AU_category, "2|5") ~ prev_AU_category,
+                                          TRUE ~ IR_category_AU_26)) |>
+    mutate(recordID = paste0("2026-",odeqIRtools::unique_AU(AU_ID),"-", Pollu_ID, "-", wqstd_code,"-", period )) |>
+    mutate(status_change = case_when(IR_category_AU_26 == prev_AU_category & is.na(Rationale_AU) ~ "No change in status- No new assessment",
+                                     IR_category_AU_26 == prev_AU_category & !is.na(Rationale_AU)~  "No change in status- Assessed",
+                                     IR_category_AU_26 == '2' & prev_AU_category %in% c('5','4A','4B', '4C') ~ "Delist",
                                      prev_AU_category == 'Unassessed' | is.na(prev_AU_category)  ~ "New Assessment",
-                                     prev_AU_category == '2' & IR_category_AU_24  %in% c('5','4A','4B', '4C') ~ "Attain to Impaired",
-                                     prev_AU_category %in% c('3D','3','3B', '3C') & IR_category_AU_24 %in% c('5','4A','4B', '4C') ~ "Insufficient to Impaired",
-                                     prev_AU_category %in% c('3D','3','3B', '3C') & IR_category_AU_24 %in% c('2') ~ "Insufficient to Attain",
-                                     TRUE ~ paste(prev_AU_category, ' to ', IR_category_AU_24 )
+                                     prev_AU_category == '2' & IR_category_AU_26  %in% c('5','4A','4B', '4C') ~ "Attain to Impaired",
+                                     prev_AU_category %in% c('3D','3','3B', '3C') & IR_category_AU_26 %in% c('5','4A','4B', '4C') ~ "Insufficient to Impaired",
+                                     prev_AU_category %in% c('3D','3','3B', '3C') & IR_category_AU_26 %in% c('2') ~ "Insufficient to Attain",
+                                     TRUE ~ paste(prev_AU_category, ' to ', IR_category_AU_26 )
     ))
 
 
