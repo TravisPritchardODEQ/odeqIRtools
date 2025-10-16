@@ -26,7 +26,8 @@ AU_info <- arc.select(arc.open('https://services.arcgis.com/uUvqNMGPm7axC2dD/arc
   select(AU_ID, AU_Name,AU_UseCode, HUC12) |>
   distinct() |>
   group_by(AU_ID, AU_Name, AU_UseCode) |>
-  summarise(HUC12 = min(HUC12))
+  summarise(HUC12 = min(HUC12)) |>
+  filter(!(AU_ID == 'OR_WS_170900120201_02_104554.2' & AU_Name == 'HUC12 Name: Columbia Slough' ))
 
 
 usethis::use_data(AU_info, overwrite = TRUE)
