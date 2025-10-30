@@ -19,7 +19,7 @@ data_to_agg <- df %>%
   group_by(group_num) %>%
   mutate(analysis_comment = paste0(Result_UID, collapse = ", "),
          keep = ifelse(row_number() == 1, 1, 0 )) %>%
-  mutate(analysis_comment = paste("Result is the median of result_UIDs:",analysis_comment, " - due to multiple results at same date")) %>%
+  mutate(analysis_comment = paste("Result is the mean of result_UIDs:",analysis_comment, " - due to multiple results at same date")) %>%
   ungroup() %>%
   select(Result_UID, mean_result, keep, analysis_comment)
 
