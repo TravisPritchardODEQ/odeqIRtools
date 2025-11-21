@@ -24,7 +24,7 @@ rollup_WS_AU <- function(df, char_name_field){
                                           TRUE ~ IR_category_AU_26)) |>
     mutate(recordID = paste0("2026-",odeqIRtools::unique_AU(AU_ID),"-", Pollu_ID, "-", wqstd_code,"-", period )) |>
     mutate(Rationale_AU = case_when(Rationale_AU == "" ~ NA_character_,
-                                    TRUE ~ Rationale_AU))
+                                    TRUE ~ Rationale_AU)) |>
     mutate(status_change = case_when(IR_category_AU_26 == prev_AU_category & is.na(Rationale_AU) ~ "No change in status- No new assessment",
                                      IR_category_AU_26 == prev_AU_category & !is.na(Rationale_AU)~  "No change in status- Assessed",
                                      IR_category_AU_26 == '2' & prev_AU_category %in% c('5','4A','4B', '4C') ~ "Delist",
