@@ -37,7 +37,7 @@ join_prev_assessments <- function(df, AU_type){
       full_join(select(param_GNIS, -Pollutant), join_by(AU_ID, AU_GNIS_Name, Pollu_ID, wqstd_code, period)) |>
       mutate(IR_category_GNIS_26 = case_when(is.na(IR_category_GNIS_26) ~ "Unassessed",
                                              TRUE ~ IR_category_GNIS_26)) |>
-      mutate(prev_GNIS_rationale = case_when(!is.na(prev_GNIS_rationale) ~ paste("2024 rationale:", prev_GNIS_rationale),
+      mutate(prev_GNIS_rationale = case_when(#!is.na(prev_GNIS_rationale) ~ paste("2024 rationale:", prev_GNIS_rationale),
                                              !is.na(prev_GNIS_category) & is.na(prev_GNIS_rationale) ~ "See previous IR reports",
                                              TRUE ~ prev_GNIS_rationale),
              prev_GNIS_category = case_when(is.na(prev_GNIS_category) ~ "Unassessed",
