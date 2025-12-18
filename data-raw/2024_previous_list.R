@@ -39,7 +39,12 @@ prev_list_GNIS <- prev_list_GNIS_import |>
   rename(prev_GNIS_category = GNIS_final_category) |>
   select(-Rationale, -previous_rationale)
 
-
+prev_list_GNIS <- prev_list_GNIS |>
+  group_by(AU_ID,AU_GNIS_Name, Pollutant, Pollu_ID, wqstd_code, period ) |>
+  mutate(prev_GNIS_category = factor(prev_GNIS_category,
+                                     levels=c("Unassessed", '3D',"3", "3B", "3C", "2", '4B', '4C', '4','4A','5C', "5" ), ordered=TRUE)) |>
+  filter(prev_GNIS_category == max(prev_GNIS_category)) |>
+  slice_head(n = 1)
 
 prev_list_MLoc_import <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report - IR 2024/Previous List Data/MLoc_rollup_final.xlsx")
 
