@@ -25,6 +25,9 @@ join_prev_assessments <- function(df, AU_type){
     df_names <- names(df)
 
     param_GNIS <- prev_list_GNIS |>
+      mutate(#AU_GNIS = str_c(AU_ID, AU_GNIS_Name, sep = ";"),
+        Pollu_ID = as.numeric(Pollu_ID),
+        wqstd_code = as.numeric(wqstd_code)) |>
       filter(Pollu_ID %in% df$Pollu_ID,
              wqstd_code %in% df$wqstd_code,
              period %in% df$period)
@@ -32,8 +35,8 @@ join_prev_assessments <- function(df, AU_type){
     GNIS_join <- df |>
       ungroup() |>
       mutate(#AU_GNIS = str_c(AU_ID, AU_GNIS_Name, sep = ";"),
-        Pollu_ID = as.character(Pollu_ID),
-        wqstd_code = as.character(wqstd_code)) |>
+        Pollu_ID = as.numeric(Pollu_ID),
+        wqstd_code = as.numeric(wqstd_code)) |>
       full_join(select(param_GNIS, -Pollutant), join_by(AU_ID, AU_GNIS_Name, Pollu_ID, wqstd_code, period)) |>
       mutate(IR_category_GNIS_26 = case_when(is.na(IR_category_GNIS_26) ~ "Unassessed",
                                              TRUE ~ IR_category_GNIS_26)) |>
@@ -69,6 +72,9 @@ join_prev_assessments <- function(df, AU_type){
     df_names <- names(df)
 
     param_AU_previous_categories <- prev_list_AU |>
+      mutate(#AU_GNIS = str_c(AU_ID, AU_GNIS_Name, sep = ";"),
+        Pollu_ID = as.numeric(Pollu_ID),
+        wqstd_code = as.numeric(wqstd_code)) |>
       filter(Pollu_ID %in% df$Pollu_ID,
              wqstd_code %in% df$wqstd_code,
              period %in% df$period) |>
@@ -77,8 +83,8 @@ join_prev_assessments <- function(df, AU_type){
 
 
     overall_join <- df %>%
-      mutate(Pollu_ID = as.character(Pollu_ID),
-             wqstd_code = as.character(wqstd_code)) %>%
+      mutate(Pollu_ID = as.numeric(Pollu_ID),
+             wqstd_code = as.numeric(wqstd_code)) %>%
       full_join(select(param_AU_previous_categories, -Pollutant)) |>
       mutate(IR_category = case_when( is.na(IR_category) ~ "Unassessed",
                                       TRUE ~IR_category )) |>

@@ -58,8 +58,8 @@ prev_list_delist <- read.xlsx("C:/Users/tpritch/Oregon/DEQ - Integrated Report -
 
 # Updates ---------------------------------------------------------------------------------------------------------
 prev_list_AU <- prev_list_AU |>
-  dplyr::mutate(wqstd_code = as.character(wqstd_code),
-                Pollu_ID = as.character(Pollu_ID)) |>
+  dplyr::mutate(wqstd_code = as.numeric(wqstd_code),
+                Pollu_ID = as.numeric(Pollu_ID)) |>
   dplyr::mutate(Pollu_ID = dplyr::case_when(wqstd_code == '15' & Pollu_ID %in% c('77','78','79' ) ~ '77',
                                             TRUE ~ Pollu_ID),
                 Pollutant = dplyr::case_when(wqstd_code == '15' & Pollu_ID %in% c('77','78','79' ) ~ 'Endosulfan',
