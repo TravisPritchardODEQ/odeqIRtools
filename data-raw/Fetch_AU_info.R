@@ -22,7 +22,7 @@ arc.check_product()
 
 
 
-AU_info <- arc.select(arc.open('https://services.arcgis.com/uUvqNMGPm7axC2dD/arcgis/rest/services/Oregon_AUs/FeatureServer/0')) |>
+AU_info <- arc.select(arc.open('https://services.arcgis.com/uUvqNMGPm7axC2dD/arcgis/rest/services/Oregon_AUs/FeatureServer/5')) |>
   select(AU_ID, AU_Name,AU_UseCode, HUC12) |>
   distinct() |>
   group_by(AU_ID, AU_Name, AU_UseCode) |>
