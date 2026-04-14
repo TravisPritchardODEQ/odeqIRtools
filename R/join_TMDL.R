@@ -45,7 +45,8 @@ join_TMDL <- function(df, type){
 
   LU_BU_Assessment <-  dplyr::tbl(IR.sql, 'LU_BU_Assessment') |>
     dplyr::collect() |>
-    dplyr::mutate(Pollu_ID = as.numeric(Pollu_ID))
+    dplyr::mutate(Pollu_ID = as.numeric(Pollu_ID),
+                  wqstd_code = as.numeric(wqstd_code))
 
   DBI::dbDisconnect(IR.sql)
 
