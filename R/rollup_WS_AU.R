@@ -12,6 +12,8 @@
 rollup_WS_AU <- function(df, char_name_field){
 
   WS_AU_rollup <- df |>
+    mutate(final_GNIS_cat = factor(final_GNIS_cat,
+                                 levels=c("Unassessed", '3D',"3", "3B", "3C", "2", '4B', '4C', '4','4A','5C', "5" ), ordered=TRUE)) |>
     ungroup() %>%
     mutate(Rationale_GNIS = case_when(!is.na(Rationale_GNIS) ~ paste0(AU_GNIS_Name, ": ",Rationale_GNIS ),
                                       TRUE ~ Rationale_GNIS)) |>
